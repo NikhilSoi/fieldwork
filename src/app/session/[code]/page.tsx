@@ -6,11 +6,15 @@ import { useParams, useSearchParams } from 'next/navigation';
 import { supabase } from '@/lib/supabase';
 import { SCENARIOS } from '@/lib/scenarios';
 import { DECISIONS, ROUND_ORDER } from '@/lib/decisions';
+import { computeCumulativeKPIs } from '@/lib/consequences';
+import { applyDeltasToTabData } from '@/lib/kpi-engine';
+import { PRIMARY_SIGNALS } from '@/lib/primary-signals';
 import DataDashboard from '@/components/sim/DataDashboard';
 import TeamPanel from '@/components/sim/TeamPanel';
 import NovaChat from '@/components/sim/NovaChat';
 import RoundNav from '@/components/sim/RoundNav';
 import RoundTimer from '@/components/sim/RoundTimer';
+import type { RoundKey } from '@/lib/decisions';
 
 /* ── Display name → scenario key map ── */
 const SCENARIO_KEY_MAP: Record<string, string> = {
@@ -89,7 +93,6 @@ export default function SessionPage() {
   const [activeTabName, setActiveTabName] = useState('P&L');
   const [activeMemberIdx, setActiveMemberIdx] = useState(memberIdx);
 
-  /* Track whether initial load is done — only auto-advance on first load */
   const initialLoadDone = useRef(false);
 
   /* ── Derived scenario data ── */
@@ -97,7 +100,6 @@ export default function SessionPage() {
   const scenario = scenarioKey ? SCENARIOS[scenarioKey] : null;
   const decisionData = scenarioKey ? DECISIONS[scenarioKey] : null;
 
-  /* Filter rounds to only those the instructor selected */
   const activeRoundOrder = session
     ? ROUND_ORDER.filter((_, idx) => session.active_rounds.includes(idx))
     : ROUND_ORDER;
@@ -107,11 +109,48 @@ export default function SessionPage() {
 
   const roundKey = activeRoundOrder[currentRoundIdx] ?? 'budget';
   const currentRound = decisionData?.[roundKey as keyof typeof decisionData] ?? null;
-  const tabData = scenario ? buildTabData(scenario.tabs) : undefined;
+  const baseTabData = scenario ? buildTabData(scenario.tabs) : undefined;
 
-  /* ── Fetch session data (teams, members, decisions) ── */
+  /* ── Compute cumulative KPI state from completed rounds ── */
+  const completedRounds = pastDecisions
+    .filter((d: any) => d.round && d.final_votes)
+    .map((d: any) => ({ round: d.round as RoundKey, finalVotes: d.final_votes }));
+
+  const currentKPIs = scenarioKey ? computeCumulativeKPIs(scenarioKey, completedRounds) : {};
+
+  const prevRounds = completedRounds.slice(0, -1);
+  const previousKPIs = prevRounds.length > 0 && scenarioKey
+    ? computeCumulativeKPIs(scenarioKey, prevRounds)
+    : null;
+
+  /* Apply deltas to base tab data */
+  const adjustedTabData = scenario && completedRounds.length > 0
+    ? buildTabData(applyDeltasToTabData(scenarioKey, scenario.tabs, currentKPIs, previousKPIs))
+    : baseTabData;
+
+  /* Primary signal for current round */
+  const primarySignal = scenarioKey ? PRIMARY_SIGNALS[scenarioKey]?.[roundKey] ?? null : null;
+
+  /* Prepend previous consequence to round brief (Round 2+) */
+  const modifiedBrief = (() => {
+    if (currentRoundIdx === 0 || !currentRound) return currentRound?.brief ?? '';
+
+    const prevRoundKey = activeRoundOrder[currentRoundIdx - 1];
+    const prevDecision = pastDecisions.find((d: any) => d.round === prevRoundKey);
+    if (!prevDecision || !decisionData) return currentRound.brief;
+
+    const prevRoundData = decisionData[prevRoundKey as keyof typeof decisionData];
+    if (!prevRoundData) return currentRound.brief;
+
+    const q1ChosenIdx = prevDecision.final_votes?.[0] ?? 0;
+    const q1Consequence = prevRoundData.questions[0]?.options[q1ChosenIdx]?.consequence;
+    if (!q1Consequence) return currentRound.brief;
+
+    return `${q1Consequence.title}. ${currentRound.brief}`;
+  })();
+
+  /* ── Fetch session data ── */
   const fetchSessionData = useCallback(async () => {
-    // 1. Session
     const { data: sessionData } = await supabase
       .from('sessions')
       .select('id, code, scenario, active_rounds, status, team_size, round_duration_minutes')
@@ -124,7 +163,6 @@ export default function SessionPage() {
     }
     setSession(sessionData);
 
-    // 2. Teams — fetch to get updated score
     const { data: teamsData } = await supabase
       .from('teams')
       .select('id, name, color, score, round_idx')
@@ -136,7 +174,6 @@ export default function SessionPage() {
       if (myTeam) setTeam(myTeam);
     }
 
-    // 3. Members
     if (teamId) {
       const { data: membersData } = await supabase
         .from('members')
@@ -147,7 +184,6 @@ export default function SessionPage() {
       if (membersData) setMembers(membersData);
     }
 
-    // 4. Decisions — compute round results
     const { data: decisionsData } = await supabase
       .from('decisions')
       .select('*')
@@ -158,7 +194,6 @@ export default function SessionPage() {
     if (decisionsData) {
       setPastDecisions(decisionsData);
 
-      /* Compute active rounds from session data */
       const localActiveRounds = ROUND_ORDER.filter((_, idx) =>
         (sessionData.active_rounds as number[]).includes(idx)
       );
@@ -175,8 +210,6 @@ export default function SessionPage() {
 
       setRoundResults(results);
 
-      // Only auto-advance currentRoundIdx on initial page load
-      // After that, the user advances via the "Continue" button
       if (!initialLoadDone.current) {
         initialLoadDone.current = true;
         const allDone = results.every((r) => r !== null);
@@ -191,7 +224,6 @@ export default function SessionPage() {
       }
     }
 
-    // 5. Votes for current round
     if (teamId) {
       const resolvedKey = ROUND_ORDER[currentRoundIdx] ?? 'budget';
       const { data: votesData } = await supabase
@@ -218,9 +250,6 @@ export default function SessionPage() {
   }, [fetchSessionData]);
 
   /* ── Realtime subscriptions ── */
-  /* Subscribe without server-side filters (they require replica identity on the
-     filter column, which non-PK columns don't have by default). On any change
-     to these tables we re-fetch authoritative state from Supabase. */
   useEffect(() => {
     if (!session?.id) return;
 
@@ -235,12 +264,11 @@ export default function SessionPage() {
     return () => { supabase.removeChannel(channel); };
   }, [session?.id, teamId, fetchSessionData]);
 
-  /* ── Advance to next round (called by TeamPanel's "Continue" button) ── */
+  /* ── Advance to next round ── */
   const handleAdvanceRound = useCallback(async () => {
     const nextIdx = currentRoundIdx + 1;
     if (nextIdx >= activeRoundOrder.length) return;
 
-    // Update team round_idx in DB
     if (teamId) {
       await supabase
         .from('teams')
@@ -248,11 +276,9 @@ export default function SessionPage() {
         .eq('id', teamId);
     }
 
-    // Advance locally
     setCurrentRoundIdx(nextIdx);
     setVotes({});
 
-    // Re-fetch to get latest score and state
     await fetchSessionData();
   }, [currentRoundIdx, teamId, fetchSessionData]);
 
@@ -352,7 +378,17 @@ export default function SessionPage() {
           <DataDashboard
             scenario={scenarioKey}
             round={roundKey}
-            tabData={tabData}
+            roundIdx={currentRoundIdx}
+            tabData={adjustedTabData}
+            onTabChange={(tabKey) => {
+              const reverseMap: Record<string, string> = {
+                pl: 'P&L', funnel: 'Funnel', channels: 'Channels',
+                cohorts: 'Cohorts', rfm: 'RFM', benchmarks: 'Benchmarks',
+              };
+              setActiveTabName(reverseMap[tabKey] ?? tabKey);
+            }}
+            pastDecisions={pastDecisions}
+            primarySignal={primarySignal}
           />
         </div>
 
@@ -376,6 +412,8 @@ export default function SessionPage() {
                 questions={currentRound.questions}
                 onAdvanceRound={handleAdvanceRound}
                 sessionCode={code}
+                scenarioKey={scenarioKey}
+                roundBrief={modifiedBrief}
               />
             </div>
           )}
@@ -392,7 +430,7 @@ export default function SessionPage() {
                 scenario={scenarioKey}
                 round={roundKey}
                 tabData={currentTabSummary}
-                roundBrief={currentRound?.brief ?? ''}
+                roundBrief={modifiedBrief}
                 votes={votes}
                 decisions={pastDecisions}
                 activeMember={members[activeMemberIdx]?.name ?? `Member ${activeMemberIdx + 1}`}
