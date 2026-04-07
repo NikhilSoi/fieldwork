@@ -145,6 +145,10 @@ export default function SessionPage() {
     return `${q1Consequence.title}. ${currentRound.brief}`;
   })();
 
+  // Use ref for currentRoundIdx inside fetchSessionData to avoid re-render loop
+  const currentRoundIdxRef = useRef(currentRoundIdx);
+  currentRoundIdxRef.current = currentRoundIdx;
+
   /* ── Fetch session data ── */
   const fetchSessionData = useCallback(async () => {
     const { data: sessionData } = await supabase
@@ -160,7 +164,7 @@ export default function SessionPage() {
     setSession(sessionData);
 
     // Fetch teams, members, decisions, and votes ALL in parallel
-    const resolvedKey = ROUND_ORDER[currentRoundIdx] ?? 'budget';
+    const resolvedKey = ROUND_ORDER[currentRoundIdxRef.current] ?? 'budget';
     const [teamsRes, membersRes, decisionsRes, votesRes] = await Promise.all([
       supabase
         .from('teams')
@@ -233,7 +237,7 @@ export default function SessionPage() {
     }
 
     setLoading(false);
-  }, [code, teamId, currentRoundIdx]);
+  }, [code, teamId]);
 
   useEffect(() => {
     fetchSessionData();
