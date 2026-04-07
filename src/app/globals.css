@@ -1,0 +1,154 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  /* Backgrounds */
+  --color-bg-primary: #F4F7F5;
+  --color-bg-secondary: #EEF2EF;
+  --color-bg-dark: #0B1F35;
+  --color-bg-elevated: #FFFFFF;
+
+  /* Text */
+  --color-text-primary: #0B1F35;
+  --color-text-secondary: #4A5568;
+  --color-text-muted: #718096;
+  --color-text-inverse: #F4F7F5;
+
+  /* Accent */
+  --color-accent: #3A9E82;
+  --color-accent-hover: #2D8A6E;
+  --color-accent-light: #E8F5F1;
+
+  /* Borders */
+  --color-border: #D1D9D4;
+  --color-border-strong: #A8B8B0;
+
+  /* Semantic */
+  --color-success: #3A9E82;
+  --color-danger: #E53E3E;
+  --color-warning: #D97706;
+
+  /* Legacy compat */
+  --background: #F4F7F5;
+  --foreground: #0B1F35;
+}
+
+/* ─── Base ──────────────────── */
+body {
+  color: var(--color-text-primary);
+  background: var(--color-bg-primary);
+  font-family: var(--font-inter), var(--font-geist-sans), system-ui, -apple-system, sans-serif;
+}
+
+/* ─── Scrollbar ─────────────── */
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: #A8B8B0; border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: #718096; }
+
+/* ─── Selection ─────────────── */
+::selection {
+  background: rgba(58, 158, 130, 0.2);
+  color: #0B1F35;
+}
+
+/* ─── Focus ─────────────────── */
+*:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+/* ─── Cursor ────────────────── */
+button, a, [role="button"], select, label[for], input[type="checkbox"], input[type="radio"] {
+  cursor: pointer;
+}
+button:disabled, a[aria-disabled="true"] {
+  cursor: not-allowed;
+}
+
+/* ─── Animations ────────────── */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@keyframes fadeInScale {
+  from { opacity: 0; transform: scale(0.95) translateY(4px); }
+  to { opacity: 1; transform: scale(1) translateY(0); }
+}
+@keyframes pulse-pip {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-6px); }
+}
+@keyframes gridMove {
+  0% { transform: translate(0, 0); }
+  100% { transform: translate(40px, 40px); }
+}
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+@keyframes dotBounce1 { 0%,80%,100% { transform: translateY(0); } 40% { transform: translateY(-4px); } }
+@keyframes dotBounce2 { 0%,80%,100% { transform: translateY(0); } 40% { transform: translateY(-4px); } }
+@keyframes dotBounce3 { 0%,80%,100% { transform: translateY(0); } 40% { transform: translateY(-4px); } }
+
+.animate-fade-in { animation: fadeIn 0.3s ease-out both; }
+.animate-fade-in-scale { animation: fadeInScale 0.4s ease-out both; }
+.animate-pulse-pip { animation: pulse-pip 1.5s ease-in-out infinite; }
+.animate-float { animation: float 3s ease-in-out infinite; }
+
+/* Stagger delays */
+.delay-75 { animation-delay: 75ms; }
+.delay-150 { animation-delay: 150ms; }
+.delay-200 { animation-delay: 200ms; }
+.delay-300 { animation-delay: 300ms; }
+.delay-400 { animation-delay: 400ms; }
+
+/* ─── Grid background ───────── */
+.bg-grid {
+  background-image:
+    linear-gradient(rgba(58, 158, 130, 0.06) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(58, 158, 130, 0.06) 1px, transparent 1px);
+  background-size: 40px 40px;
+}
+.bg-grid-animated {
+  background-image:
+    linear-gradient(rgba(58, 158, 130, 0.08) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(58, 158, 130, 0.08) 1px, transparent 1px);
+  background-size: 40px 40px;
+  animation: gridMove 8s linear infinite;
+}
+
+/* ─── Card styles ───────────── */
+.card {
+  background: var(--color-bg-elevated);
+  border: 1px solid var(--color-border);
+  border-radius: 12px;
+  box-shadow: 0 1px 3px rgba(11, 31, 53, 0.04);
+}
+.card-hover {
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+.card-hover:hover {
+  border-color: var(--color-accent);
+  box-shadow: 0 4px 12px rgba(58, 158, 130, 0.08);
+}
+
+/* ─── Font utility classes ──── */
+.font-display { font-family: var(--font-sora), var(--font-geist-sans), system-ui, sans-serif; }
+.font-mono-data { font-family: var(--font-jetbrains), var(--font-geist-mono), 'JetBrains Mono', monospace; }
+
+/* ─── Reduced motion ────────── */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+  .bg-grid-animated { animation: none; }
+}
