@@ -159,19 +159,16 @@ export default function SessionPage() {
     }
     setSession(sessionData);
 
-    // Fetch teams, members, and decisions in parallel
-    const [teamsRes, membersRes, decisionsRes] = await Promise.all([
+    // Fetch teams, members, decisions, and votes ALL in parallel
+    const resolvedKey = ROUND_ORDER[currentRoundIdx] ?? 'budget';
+    const [teamsRes, membersRes, decisionsRes, votesRes] = await Promise.all([
       supabase
         .from('teams')
         .select('id, name, color, score, round_idx')
         .eq('session_id', sessionData.id)
         .order('created_at'),
       teamId
-        ? supabase
-            .from('members')
-            .select('id, name')
-            .eq('team_id', teamId)
-            .order('created_at')
+        ? supabase.from('members').select('id, name').eq('team_id', teamId).order('created_at')
         : Promise.resolve({ data: null }),
       supabase
         .from('decisions')
@@ -179,6 +176,9 @@ export default function SessionPage() {
         .eq('session_id', sessionData.id)
         .eq('team_id', teamId ?? '')
         .order('created_at'),
+      teamId
+        ? supabase.from('votes').select('question_idx, member_idx, option_idx').eq('team_id', teamId).eq('session_id', sessionData.id).eq('round', resolvedKey)
+        : Promise.resolve({ data: null }),
     ]);
 
     const teamsData = teamsRes.data;
@@ -188,6 +188,14 @@ export default function SessionPage() {
     }
 
     if (membersRes.data) setMembers(membersRes.data);
+
+    if (votesRes.data) {
+      const voteMap: VoteMap = {};
+      votesRes.data.forEach((v: any) => {
+        voteMap[`${v.question_idx}-${v.member_idx}`] = v.option_idx;
+      });
+      setVotes(voteMap);
+    }
 
     const decisionsData = decisionsRes.data;
 
@@ -221,24 +229,6 @@ export default function SessionPage() {
             setCurrentRoundIdx(nextUncompleted);
           }
         }
-      }
-    }
-
-    if (teamId) {
-      const resolvedKey = ROUND_ORDER[currentRoundIdx] ?? 'budget';
-      const { data: votesData } = await supabase
-        .from('votes')
-        .select('question_idx, member_idx, option_idx')
-        .eq('team_id', teamId)
-        .eq('session_id', sessionData.id)
-        .eq('round', resolvedKey);
-
-      if (votesData) {
-        const voteMap: VoteMap = {};
-        votesData.forEach((v: any) => {
-          voteMap[`${v.question_idx}-${v.member_idx}`] = v.option_idx;
-        });
-        setVotes(voteMap);
       }
     }
 
