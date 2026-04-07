@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import { supabase } from '@/lib/supabase';
 import type { Question } from '@/lib/decisions';
 import { BUDGET_CONFIG } from '@/lib/budget-config';
@@ -65,6 +65,8 @@ export default function TeamPanel({
   const [q2TileSelection, setQ2TileSelection] = useState<number | null>(null);
   const [q2RatioSelection, setQ2RatioSelection] = useState<number | null>(null);
   const [projectedOptionIdx, setProjectedOptionIdx] = useState<number | null>(null);
+
+  const voteDebounceRef = useRef<ReturnType<typeof setTimeout>>();
 
   const isBudgetRound = round === 'budget' || round === 'rfm';
   const isDiagnoseRound = round === 'diagnose';
@@ -401,7 +403,10 @@ export default function TeamPanel({
                   const fraction = budgetConfig.totalBudget > 0 ? maxAlloc / budgetConfig.totalBudget : 0;
                   const voteIdx = fraction >= budgetConfig.threshold ? maxIdx : budgetConfig.spreadThinIdx;
                   setProjectedOptionIdx(voteIdx);
-                  handleVote(0, voteIdx);
+                  clearTimeout(voteDebounceRef.current);
+                  voteDebounceRef.current = setTimeout(() => {
+                    handleVote(0, voteIdx);
+                  }, 500);
                 }}
               />
             </div>
@@ -431,7 +436,10 @@ export default function TeamPanel({
                 onChange={(e) => {
                   const idx = Number(e.target.value);
                   setQ2RatioSelection(idx);
-                  handleVote(1, idx);
+                  clearTimeout(voteDebounceRef.current);
+                  voteDebounceRef.current = setTimeout(() => {
+                    handleVote(1, idx);
+                  }, 500);
                 }}
                 className="w-full h-2 rounded-lg appearance-none cursor-pointer accent-[#3A9E82]"
               />
