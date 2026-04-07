@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import type { Option } from '@/lib/decisions';
 
 interface Props {
@@ -20,16 +20,17 @@ export default function BudgetSliders({ options, totalBudget, currency, onAlloca
   const total = allocations.reduce((a, b) => a + b, 0);
   const isOver = total > totalBudget;
 
-  useEffect(() => {
-    onAllocationChange(allocations);
-  }, [allocations, onAllocationChange]);
-
   const handleSlider = (idx: number, value: number) => {
     setAllocations((prev) => {
       const next = [...prev];
       next[idx] = value;
       return next;
     });
+  };
+
+  // Only notify parent when user releases the slider
+  const handleRelease = () => {
+    onAllocationChange(allocations);
   };
 
   const step = Math.round(totalBudget / 100);
@@ -57,6 +58,8 @@ export default function BudgetSliders({ options, totalBudget, currency, onAlloca
             step={step}
             value={allocations[idx]}
             onChange={(e) => handleSlider(idx, Number(e.target.value))}
+            onMouseUp={handleRelease}
+            onTouchEnd={handleRelease}
             className="w-full h-2 rounded-lg appearance-none cursor-pointer accent-[#3A9E82]"
             style={{
               background: `linear-gradient(to right, #3A9E82 0%, #3A9E82 ${(allocations[idx] / totalBudget) * 100}%, #EEF2EF ${(allocations[idx] / totalBudget) * 100}%, #EEF2EF 100%)`,

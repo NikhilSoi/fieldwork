@@ -406,7 +406,7 @@ export default function TeamPanel({
                   clearTimeout(voteDebounceRef.current);
                   voteDebounceRef.current = setTimeout(() => {
                     handleVote(0, voteIdx);
-                  }, 500);
+                  }, 800);
                 }}
               />
             </div>
@@ -439,7 +439,7 @@ export default function TeamPanel({
                   clearTimeout(voteDebounceRef.current);
                   voteDebounceRef.current = setTimeout(() => {
                     handleVote(1, idx);
-                  }, 500);
+                  }, 800);
                 }}
                 className="w-full h-2 rounded-lg appearance-none cursor-pointer accent-[#3A9E82]"
               />
