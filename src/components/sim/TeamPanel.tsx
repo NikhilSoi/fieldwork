@@ -535,6 +535,10 @@ export default function TeamPanel({
                     const isSplit = uniqueChoices.length > 1;
                     const votedAligned = uniqueChoices.length === 1;
 
+                    const isBudgetQ1 = isBudgetRound && qIdx === 0;
+                    const isBudgetQ2 = round === 'budget' && qIdx === 1;
+                    const alignedLabel = q.options[Number(uniqueChoices[0])]?.label;
+
                     return (
                       <div key={qIdx} className="text-sm">
                         <p className="font-medium text-[#0F1C2E] mb-1">
@@ -542,7 +546,12 @@ export default function TeamPanel({
                         </p>
                         {votedAligned && (
                           <p className="text-[#3A9E82] flex items-center gap-1.5">
-                            <span>&#10003;</span> Aligned on: {q.options[Number(uniqueChoices[0])]?.label}
+                            <span>&#10003;</span>
+                            {isBudgetQ1
+                              ? ` Strategy: ${alignedLabel} (based on budget allocation)`
+                              : isBudgetQ2
+                              ? ` Ratio: ${alignedLabel}`
+                              : ` Aligned on: ${alignedLabel}`}
                           </p>
                         )}
                         {isSplit && (
@@ -554,6 +563,7 @@ export default function TeamPanel({
                                 </span>
                                 {' \u2192 '}
                                 {q.options[Number(optStr)]?.label}
+                                {isBudgetQ1 ? ' (from allocation)' : ''}
                               </p>
                             ))}
                           </div>
