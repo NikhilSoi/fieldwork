@@ -3,7 +3,6 @@
 import { useState, useEffect, useCallback } from 'react';
 import { supabase } from '@/lib/supabase';
 import type { Question } from '@/lib/decisions';
-import { isLowerBetter } from '@/lib/consequences';
 import { BUDGET_CONFIG } from '@/lib/budget-config';
 import BudgetSliders from './BudgetSliders';
 import HypothesisRanking from './HypothesisRanking';
@@ -245,15 +244,6 @@ export default function TeamPanel({
       return;
     }
     await commitDecision();
-  };
-
-  const getVotePips = (qIdx: number, optIdx: number) => {
-    return effectiveMembers
-      .map((_, mIdx) => {
-        const v = votes[voteKey(qIdx, mIdx)];
-        return v === optIdx ? mIdx : -1;
-      })
-      .filter((idx) => idx !== -1);
   };
 
   const isLastRound = roundIdx >= totalRounds - 1;

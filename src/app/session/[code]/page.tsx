@@ -40,10 +40,6 @@ function buildTabData(tabs: Record<string, any>) {
   };
 }
 
-const ROUND_LABELS = ROUND_ORDER.map(
-  (k) => k.charAt(0).toUpperCase() + k.slice(1)
-);
-
 interface Session {
   id: string;
   code: string;
