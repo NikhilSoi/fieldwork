@@ -156,30 +156,38 @@ export default function JoinPage() {
     setLoading(true);
     setError('');
 
-    const { data: teamsData } = await supabase
-      .from('teams')
-      .select('id, name, color')
-      .eq('session_id', session.id)
-      .order('created_at');
+    // Fetch teams and all members for this session in parallel (2 queries instead of N+1)
+    const [teamsRes, membersRes] = await Promise.all([
+      supabase
+        .from('teams')
+        .select('id, name, color')
+        .eq('session_id', session.id)
+        .order('created_at'),
+      supabase
+        .from('members')
+        .select('team_id, name')
+        .eq('session_id', session.id),
+    ]);
 
+    const teamsData = teamsRes.data;
     if (!teamsData || teamsData.length === 0) {
       setError('No teams found for this session.');
       setLoading(false);
       return;
     }
 
-    const teamsWithMembers: TeamInfo[] = [];
-    for (const t of teamsData) {
-      const { data: membersData, count } = await supabase
-        .from('members')
-        .select('name', { count: 'exact' })
-        .eq('team_id', t.id);
-      teamsWithMembers.push({
-        ...t,
-        memberCount: count ?? 0,
-        members: (membersData ?? []).map((m) => ({ name: m.name })),
-      });
+    // Group members by team_id
+    const membersByTeam: Record<string, MemberInfo[]> = {};
+    for (const m of membersRes.data ?? []) {
+      if (!membersByTeam[m.team_id]) membersByTeam[m.team_id] = [];
+      membersByTeam[m.team_id].push({ name: m.name });
     }
+
+    const teamsWithMembers: TeamInfo[] = teamsData.map((t) => ({
+      ...t,
+      memberCount: membersByTeam[t.id]?.length ?? 0,
+      members: membersByTeam[t.id] ?? [],
+    }));
 
     setTeams(teamsWithMembers);
     setStep(3);

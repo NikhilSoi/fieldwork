@@ -249,19 +249,28 @@ export default function SessionPage() {
     fetchSessionData();
   }, [fetchSessionData]);
 
-  /* ── Realtime subscriptions ── */
+  /* ── Realtime subscriptions (debounced to avoid cascading refetches) ── */
   useEffect(() => {
     if (!session?.id) return;
 
+    let debounceTimer: ReturnType<typeof setTimeout> | null = null;
+    const debouncedFetch = () => {
+      if (debounceTimer) clearTimeout(debounceTimer);
+      debounceTimer = setTimeout(() => { fetchSessionData(); }, 300);
+    };
+
     const channel = supabase
       .channel(`session-${session.id}`)
-      .on('postgres_changes', { event: '*', schema: 'public', table: 'votes' }, () => { fetchSessionData(); })
-      .on('postgres_changes', { event: '*', schema: 'public', table: 'decisions' }, () => { fetchSessionData(); })
-      .on('postgres_changes', { event: '*', schema: 'public', table: 'members' }, () => { fetchSessionData(); })
-      .on('postgres_changes', { event: '*', schema: 'public', table: 'teams' }, () => { fetchSessionData(); })
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'votes' }, debouncedFetch)
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'decisions' }, debouncedFetch)
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'members' }, debouncedFetch)
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'teams' }, debouncedFetch)
       .subscribe();
 
-    return () => { supabase.removeChannel(channel); };
+    return () => {
+      if (debounceTimer) clearTimeout(debounceTimer);
+      supabase.removeChannel(channel);
+    };
   }, [session?.id, teamId, fetchSessionData]);
 
   /* ── Advance to next round ── */
