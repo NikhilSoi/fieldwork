@@ -191,9 +191,6 @@ export default function JoinPage() {
     setLoading(true);
     setError('');
 
-    const selectedTeam = teams.find((t) => t.id === selectedTeamId);
-    const memberIdx = selectedTeam?.memberCount ?? 0;
-
     const { error: insertError } = await supabase
       .from('members')
       .insert({
@@ -203,12 +200,24 @@ export default function JoinPage() {
       });
 
     if (insertError) {
-      setError('Failed to join. Please try again.');
+      console.error('Join insert error:', insertError);
+      setError(`Failed to join: ${insertError.message || 'Unknown error'}. Please try again.`);
       setLoading(false);
       return;
     }
 
-    router.push(`/session/${session.code}?team=${selectedTeamId}&member=${memberIdx}`);
+    // Fetch actual member index AFTER insert to avoid stale data
+    const { data: currentMembers } = await supabase
+      .from('members')
+      .select('name')
+      .eq('team_id', selectedTeamId)
+      .order('created_at');
+
+    const memberIdx = currentMembers
+      ? currentMembers.findIndex((m) => m.name === name.trim())
+      : 0;
+
+    router.push(`/session/${session.code}?team=${selectedTeamId}&member=${memberIdx >= 0 ? memberIdx : 0}`);
   };
 
   const scenarioLabel = session

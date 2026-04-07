@@ -159,33 +159,37 @@ export default function SessionPage() {
     }
     setSession(sessionData);
 
-    const { data: teamsData } = await supabase
-      .from('teams')
-      .select('id, name, color, score, round_idx')
-      .eq('session_id', sessionData.id)
-      .order('created_at');
+    // Fetch teams, members, and decisions in parallel
+    const [teamsRes, membersRes, decisionsRes] = await Promise.all([
+      supabase
+        .from('teams')
+        .select('id, name, color, score, round_idx')
+        .eq('session_id', sessionData.id)
+        .order('created_at'),
+      teamId
+        ? supabase
+            .from('members')
+            .select('id, name')
+            .eq('team_id', teamId)
+            .order('created_at')
+        : Promise.resolve({ data: null }),
+      supabase
+        .from('decisions')
+        .select('*')
+        .eq('session_id', sessionData.id)
+        .eq('team_id', teamId ?? '')
+        .order('created_at'),
+    ]);
 
+    const teamsData = teamsRes.data;
     if (teamsData && teamId) {
       const myTeam = teamsData.find((t) => t.id === teamId);
       if (myTeam) setTeam(myTeam);
     }
 
-    if (teamId) {
-      const { data: membersData } = await supabase
-        .from('members')
-        .select('id, name')
-        .eq('team_id', teamId)
-        .order('created_at');
+    if (membersRes.data) setMembers(membersRes.data);
 
-      if (membersData) setMembers(membersData);
-    }
-
-    const { data: decisionsData } = await supabase
-      .from('decisions')
-      .select('*')
-      .eq('session_id', sessionData.id)
-      .eq('team_id', teamId ?? '')
-      .order('created_at');
+    const decisionsData = decisionsRes.data;
 
     if (decisionsData) {
       setPastDecisions(decisionsData);
