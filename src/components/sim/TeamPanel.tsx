@@ -3,6 +3,13 @@
 import { useState, useEffect, useCallback } from 'react';
 import { supabase } from '@/lib/supabase';
 import type { Question } from '@/lib/decisions';
+import { isLowerBetter } from '@/lib/consequences';
+import { BUDGET_CONFIG } from '@/lib/budget-config';
+import BudgetSliders from './BudgetSliders';
+import HypothesisRanking from './HypothesisRanking';
+import TileSelector from './TileSelector';
+import LiveProjection from './LiveProjection';
+import ConsequenceComparison from './ConsequenceComparison';
 
 const MEMBER_COLORS = [
   '#378ADD', '#1D9E75', '#D85A30', '#7F77DD',
@@ -23,6 +30,8 @@ interface TeamPanelProps {
   questions: Question[];
   onAdvanceRound: () => void;
   sessionCode: string;
+  scenarioKey: string;
+  roundBrief?: string;
 }
 
 type VoteMap = Record<string, number>;
@@ -41,6 +50,8 @@ export default function TeamPanel({
   questions,
   onAdvanceRound,
   sessionCode,
+  scenarioKey,
+  roundBrief,
 }: TeamPanelProps) {
   const [votes, setVotes] = useState<VoteMap>({});
   const [locked, setLocked] = useState(false);
@@ -48,6 +59,17 @@ export default function TeamPanel({
   const [finalChoices, setFinalChoices] = useState<Record<number, number>>({});
   const [showMisalignModal, setShowMisalignModal] = useState(false);
   const [teamChecked, setTeamChecked] = useState(false);
+
+  /* ── New decision mechanic state ── */
+  const [q1Allocations, setQ1Allocations] = useState<number[]>([]);
+  const [q1Ranking, setQ1Ranking] = useState<number[]>([]);
+  const [q2TileSelection, setQ2TileSelection] = useState<number | null>(null);
+  const [q2RatioSelection, setQ2RatioSelection] = useState<number | null>(null);
+  const [projectedOptionIdx, setProjectedOptionIdx] = useState<number | null>(null);
+
+  const isBudgetRound = round === 'budget' || round === 'rfm';
+  const isDiagnoseRound = round === 'diagnose';
+  const budgetConfig = BUDGET_CONFIG[scenarioKey]?.[round as 'budget' | 'rfm'];
 
   const effectiveMembers = (() => {
     if (members.length > 0) return members;
@@ -106,9 +128,6 @@ export default function TeamPanel({
         'postgres_changes',
         { event: '*', schema: 'public', table: 'votes' },
         () => {
-          // Re-fetch all votes for this team/round instead of parsing
-          // the payload — avoids replica-identity issues where payload.new
-          // may not include non-PK columns like team_id.
           loadVotes();
           setTeamChecked(false);
         }
@@ -140,13 +159,18 @@ export default function TeamPanel({
   const memberHasVotedAll = (mIdx: number) =>
     questions.every((_, qIdx) => votes[voteKey(qIdx, mIdx)] !== undefined);
 
-  const activeMemberDone = memberHasVotedAll(activeMemberIdx);
+  const activeMemberDone = (() => {
+    if (isBudgetRound) {
+      return votes[voteKey(0, activeMemberIdx)] !== undefined &&
+             votes[voteKey(1, activeMemberIdx)] !== undefined;
+    }
+    return memberHasVotedAll(activeMemberIdx);
+  })();
 
   const membersVotedCount = effectiveMembers.filter((_, mIdx) =>
     questions.some((_, qIdx) => votes[voteKey(qIdx, mIdx)] !== undefined)
   ).length;
 
-  // Build per-question vote tallies + majority
   const computeChoices = () => {
     const choices: Record<number, number> = {};
     questions.forEach((_, qIdx) => {
@@ -170,7 +194,6 @@ export default function TeamPanel({
     return choices;
   };
 
-  // Check if there is a split on any question among voted members
   const detectSplits = () => {
     let totalVoters = 0;
     effectiveMembers.forEach((_, mIdx) => {
@@ -178,7 +201,6 @@ export default function TeamPanel({
         totalVoters++;
       }
     });
-    // Skip modal if 0 or 1 voter
     if (totalVoters <= 1) return false;
 
     for (let qIdx = 0; qIdx < questions.length; qIdx++) {
@@ -195,14 +217,21 @@ export default function TeamPanel({
   const commitDecision = async () => {
     setLocking(true);
     const choices = computeChoices();
-    await supabase.from('decisions').insert({
+
+    const insertData: any = {
       team_id: teamId,
       session_id: sessionId,
       round,
       result: 'completed',
       final_votes: choices,
       score_earned: 0,
-    });
+    };
+
+    if (isDiagnoseRound && q1Ranking.length > 0) {
+      insertData.full_ranking = q1Ranking;
+    }
+
+    await supabase.from('decisions').insert(insertData);
     setLocked(true);
     setFinalChoices(choices);
     setLocking(false);
@@ -258,7 +287,6 @@ export default function TeamPanel({
                   {Object.entries(cons.kpiDeltas).map(([key, delta]) => {
                     const isPositive = delta.startsWith('+') && !delta.includes('+0');
                     const isNegative = delta.startsWith('-');
-                    // For CAC/churn/cps: negative is good
                     const lowerIsBetter = ['cac', 'churn', 'cps', 'timeToHire'].includes(key);
                     const isGood = lowerIsBetter ? isNegative : isPositive;
                     return (
@@ -282,6 +310,15 @@ export default function TeamPanel({
           );
         })}
 
+        {/* Actual vs projected comparison for budget rounds */}
+        {isBudgetRound && projectedOptionIdx !== null && (
+          <ConsequenceComparison
+            projectedOption={questions[0].options[projectedOptionIdx] ?? null}
+            actualOption={questions[0].options[finalChoices[0] ?? 0]}
+            matched={projectedOptionIdx === (finalChoices[0] ?? 0)}
+          />
+        )}
+
         {isLastRound ? (
           <a
             href={`/debrief/${sessionCode}`}
@@ -301,9 +338,18 @@ export default function TeamPanel({
     );
   }
 
-  // ─── VOTING: show questions ───
+  // ─── VOTING: show questions with new mechanics ───
   return (
     <div className="flex flex-col gap-4 w-full">
+      {/* Round brief */}
+      {roundBrief && (
+        <div className="rounded-lg bg-[#F4F7F5] border border-[#D1D9D4] p-3">
+          <p className="text-xs text-[#718096] font-medium uppercase tracking-wider mb-1">Round brief</p>
+          <p className="text-sm text-[#4A5568]">{roundBrief}</p>
+        </div>
+      )}
+
+      {/* Member buttons */}
       <div>
         <div className="flex flex-wrap gap-2">
           {effectiveMembers.map((m, idx) => {
@@ -343,47 +389,116 @@ export default function TeamPanel({
         </p>
       </div>
 
+      {/* ── Decision mechanics by round ── */}
       <div className="flex flex-col gap-6">
-        {questions.map((q, qIdx) => (
-          <div key={qIdx} className="bg-[#F4F7F5] rounded-lg border border-[#D1D9D4] p-4">
-            <div className="text-sm font-medium text-[#0B1F35] mb-3">
-              <span className="text-[#718096] mr-2">Q{qIdx + 1}.</span>
-              {q.question}
-            </div>
-            <div className="flex flex-col gap-2">
-              {q.options.map((opt, optIdx) => {
-                const pips = getVotePips(qIdx, optIdx);
-                const myVote = votes[voteKey(qIdx, activeMemberIdx)];
-                const isSelected = myVote === optIdx;
 
-                return (
-                  <button
-                    key={optIdx}
-                    onClick={() => handleVote(qIdx, optIdx)}
-                    disabled={locked}
-                    className={`flex items-center justify-between text-left px-4 py-3 rounded-lg text-sm transition-all cursor-pointer hover:bg-[#E8F5F1] ${
-                      isSelected
-                        ? 'bg-white border-2 border-[#3A9E82] text-[#0B1F35]'
-                        : 'bg-white border border-[#D1D9D4] text-[#4A5568]'
-                    }`}
+        {/* ── BUDGET / RFM ROUND — Q1: Sliders ── */}
+        {isBudgetRound && budgetConfig && (
+          <>
+            <div className="bg-[#F4F7F5] rounded-lg border border-[#D1D9D4] p-4">
+              <div className="text-sm font-medium text-[#0B1F35] mb-3">
+                <span className="text-[#718096] mr-2">Q1.</span>
+                {questions[0].question}
+              </div>
+              <BudgetSliders
+                options={questions[0].options}
+                totalBudget={budgetConfig.totalBudget}
+                currency={budgetConfig.currency}
+                onAllocationChange={(allocs) => {
+                  setQ1Allocations(allocs);
+                  const maxAlloc = Math.max(...allocs);
+                  const maxIdx = allocs.indexOf(maxAlloc);
+                  const fraction = budgetConfig.totalBudget > 0 ? maxAlloc / budgetConfig.totalBudget : 0;
+                  const voteIdx = fraction >= budgetConfig.threshold ? maxIdx : budgetConfig.spreadThinIdx;
+                  setProjectedOptionIdx(voteIdx);
+                  handleVote(0, voteIdx);
+                }}
+              />
+            </div>
+            <LiveProjection
+              options={questions[0].options}
+              allocations={q1Allocations}
+              totalBudget={budgetConfig.totalBudget}
+              threshold={budgetConfig.threshold}
+            />
+          </>
+        )}
+
+        {/* ── BUDGET ROUND — Q2: Ratio toggle ── */}
+        {round === 'budget' && (
+          <div className="bg-[#F4F7F5] rounded-lg border border-[#D1D9D4] p-4">
+            <div className="text-sm font-medium text-[#0B1F35] mb-3">
+              <span className="text-[#718096] mr-2">Q2.</span>
+              {questions[1].question}
+            </div>
+            <div className="bg-white rounded-lg border border-[#D1D9D4] p-4">
+              <input
+                type="range"
+                min={0}
+                max={questions[1].options.length - 1}
+                step={1}
+                value={q2RatioSelection ?? 0}
+                onChange={(e) => {
+                  const idx = Number(e.target.value);
+                  setQ2RatioSelection(idx);
+                  handleVote(1, idx);
+                }}
+                className="w-full h-2 rounded-lg appearance-none cursor-pointer accent-[#3A9E82]"
+              />
+              <div className="flex justify-between mt-2">
+                {questions[1].options.map((opt, i) => (
+                  <span
+                    key={i}
+                    className={`text-xs text-center ${q2RatioSelection === i ? 'text-[#3A9E82] font-semibold' : 'text-[#718096]'}`}
+                    style={{ width: `${100 / questions[1].options.length}%` }}
                   >
-                    <span>{opt.label}</span>
-                    <span className="flex gap-1 ml-3 shrink-0">
-                      {pips.map((mIdx) => (
-                        <span
-                          key={mIdx}
-                          className="w-2 h-2 rounded-full inline-block"
-                          style={{ backgroundColor: MEMBER_COLORS[mIdx % MEMBER_COLORS.length] }}
-                          title={effectiveMembers[mIdx]?.name}
-                        />
-                      ))}
-                    </span>
-                  </button>
-                );
-              })}
+                    {opt.label}
+                  </span>
+                ))}
+              </div>
+              {q2RatioSelection !== null && (
+                <p className="text-sm text-[#0B1F35] font-medium mt-3 text-center">
+                  Selected: {questions[1].options[q2RatioSelection].label}
+                </p>
+              )}
             </div>
           </div>
-        ))}
+        )}
+
+        {/* ── DIAGNOSE ROUND — Q1: Hypothesis ranking ── */}
+        {isDiagnoseRound && (
+          <div className="bg-[#F4F7F5] rounded-lg border border-[#D1D9D4] p-4">
+            <div className="text-sm font-medium text-[#0B1F35] mb-3">
+              <span className="text-[#718096] mr-2">Q1.</span>
+              {questions[0].question}
+            </div>
+            <HypothesisRanking
+              options={questions[0].options}
+              onRankingChange={(ranking) => {
+                setQ1Ranking(ranking);
+                handleVote(0, ranking[0]);
+              }}
+            />
+          </div>
+        )}
+
+        {/* ── DIAGNOSE Q2 / RFM Q2 — Tile selector ── */}
+        {(isDiagnoseRound || round === 'rfm') && (
+          <div className="bg-[#F4F7F5] rounded-lg border border-[#D1D9D4] p-4">
+            <div className="text-sm font-medium text-[#0B1F35] mb-3">
+              <span className="text-[#718096] mr-2">Q2.</span>
+              {questions[1].question}
+            </div>
+            <TileSelector
+              options={questions[1].options}
+              selectedIdx={q2TileSelection}
+              onSelect={(idx) => {
+                setQ2TileSelection(idx);
+                handleVote(1, idx);
+              }}
+            />
+          </div>
+        )}
       </div>
 
       {/* ─── Check with team / Lock in decision ─── */}
@@ -401,7 +516,6 @@ export default function TeamPanel({
         </button>
       ) : (
         <div className="rounded-lg border border-[#D1D9D4] bg-[#F4F7F5] p-4 flex flex-col gap-3">
-          {/* Inline alignment summary */}
           {(() => {
             const hasSplit = detectSplits();
             return (
@@ -493,7 +607,7 @@ export default function TeamPanel({
         </div>
       )}
 
-      {/* ─── Misalignment modal (shown when locking with split) ─── */}
+      {/* ─── Misalignment modal ─── */}
       {showMisalignModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40">
           <div className="bg-white rounded-xl shadow-xl max-w-lg w-full mx-4 p-6">
