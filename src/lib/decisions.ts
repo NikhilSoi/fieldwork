@@ -6,6 +6,7 @@ export type Consequence = {
 
 export type Option = {
   label: string;
+  shortDescription?: string;
   consequence: Consequence;
 };
 
