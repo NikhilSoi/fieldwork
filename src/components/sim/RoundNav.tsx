@@ -23,7 +23,7 @@ export default function RoundNav({
         return (
           <div key={idx} className="flex items-center">
             {idx > 0 && (
-              <div className={`h-0.5 w-6 ${idx <= currentRound ? 'bg-white/20' : 'bg-white/[0.06]'}`} />
+              <div className={`h-0.5 w-6 ${idx <= currentRound ? 'bg-[#A8B8B0]' : 'bg-[#D1D9D4]'}`} />
             )}
 
             <button
@@ -33,7 +33,7 @@ export default function RoundNav({
               disabled={isFuture}
               className={`relative flex items-center justify-center w-9 h-9 rounded-full text-xs font-semibold transition-all shrink-0 ${
                 isFuture
-                  ? 'text-white/30 cursor-not-allowed'
+                  ? 'bg-[#EEF2EF] text-[#718096] cursor-not-allowed'
                   : isCompleted
                   ? 'cursor-pointer hover:scale-110'
                   : isCurrent
@@ -45,8 +45,6 @@ export default function RoundNav({
                   ? 'rgba(58,158,130,0.15)'
                   : isCurrent
                   ? 'rgba(58,158,130,0.1)'
-                  : isFuture
-                  ? 'rgba(255,255,255,0.04)'
                   : undefined,
                 border: isCurrent
                   ? '2px solid #3A9E82'

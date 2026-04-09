@@ -26,7 +26,7 @@ export default function HypothesisRanking({ options, onRankingChange }: Props) {
 
   return (
     <div className="flex flex-col gap-2">
-      <p className="text-xs text-white/40 font-medium uppercase tracking-wider mb-1">
+      <p className="text-xs text-[#718096] font-medium uppercase tracking-wider mb-1">
         Drag to rank from most likely to least likely
       </p>
 
@@ -41,21 +41,19 @@ export default function HypothesisRanking({ options, onRankingChange }: Props) {
                       ref={provided.innerRef}
                       {...provided.draggableProps}
                       {...provided.dragHandleProps}
-                      className="flex items-center gap-3 px-4 py-3 rounded-2xl text-sm transition-all"
-                      style={{
-                        ...provided.draggableProps.style,
-                        background: snapshot.isDragging ? 'rgba(58,158,130,0.15)' : 'rgba(255,255,255,0.04)',
-                        border: snapshot.isDragging ? '1px solid #3A9E82' : '1px solid rgba(255,255,255,0.08)',
-                        boxShadow: snapshot.isDragging ? '0 8px 32px rgba(0,0,0,0.4)' : undefined,
-                      }}
+                      className={`flex items-center gap-3 px-4 py-3 rounded-lg border text-sm transition-all ${
+                        snapshot.isDragging
+                          ? 'bg-[#E8F5F1] border-[#3A9E82] shadow-lg'
+                          : 'bg-white border-[#D1D9D4] hover:border-[#3A9E82]/50'
+                      }`}
                     >
                       <span className={`w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold flex-shrink-0 ${
-                        position === 0 ? 'bg-[#3A9E82] text-white' : 'bg-white/[0.06] text-white/40'
+                        position === 0 ? 'bg-[#3A9E82] text-white' : 'bg-[#EEF2EF] text-[#718096]'
                       }`}>
                         {position + 1}
                       </span>
-                      <span className="text-white font-medium">{options[optIdx].label}</span>
-                      <svg className="ml-auto w-4 h-4 text-white/20 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <span className="text-[#0B1F35] font-medium">{options[optIdx].label}</span>
+                      <svg className="ml-auto w-4 h-4 text-[#A8B8B0] flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 8h16M4 16h16" />
                       </svg>
                     </div>

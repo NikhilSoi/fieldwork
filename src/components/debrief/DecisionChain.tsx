@@ -18,7 +18,7 @@ export default function DecisionChain({
     <div className="space-y-6">
       <div className="flex items-center gap-2 mb-2">
         <span className="w-3 h-3 rounded-full" style={{ backgroundColor: team.color }} />
-        <h3 className="text-lg font-bold text-white">{team.name}</h3>
+        <h3 className="text-lg font-bold text-[#0B1F35]">{team.name}</h3>
       </div>
 
       {ROUND_ORDER.map((roundKey, ri) => {
@@ -29,30 +29,30 @@ export default function DecisionChain({
         const finalVotes: Record<string, number> = teamDecision?.final_votes ?? {};
 
         return (
-          <div key={roundKey} className="rounded-2xl overflow-hidden" style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.08)', backdropFilter: 'blur(12px)', borderRadius: '16px' }}>
-            <div className="px-4 py-3 border-b border-white/[0.08] bg-white/[0.04]">
-              <span className="text-xs text-white/40 font-mono">Round {ri + 1}</span>
-              <h4 className="font-semibold text-sm mt-0.5 capitalize text-white">{roundKey}</h4>
+          <div key={roundKey} className="rounded-xl border border-[#D1D9D4] bg-white overflow-hidden">
+            <div className="px-4 py-3 border-b border-[#D1D9D4] bg-[#EEF2EF]">
+              <span className="text-xs text-[#718096] font-mono">Round {ri + 1}</span>
+              <h4 className="font-semibold text-sm mt-0.5 capitalize text-[#0B1F35]">{roundKey}</h4>
             </div>
 
-            <div className="divide-y divide-white/[0.06]">
+            <div className="divide-y divide-[#EEF2EF]">
               {round.questions.map((q, qIdx) => {
                 const chosenIdx = finalVotes[qIdx] as number | undefined;
                 const chosen = chosenIdx != null ? q.options[chosenIdx] : null;
 
                 return (
                   <div key={qIdx} className="px-4 py-4">
-                    <p className="text-sm text-white/60 mb-2">{q.question}</p>
+                    <p className="text-sm text-[#4A5568] mb-2">{q.question}</p>
 
                     {chosen ? (
-                      <div className="rounded-2xl bg-white/[0.03] border border-white/[0.08] p-3">
-                        <p className="text-sm font-medium text-white mb-1">
+                      <div className="rounded-lg bg-[#F4F7F5] border border-[#D1D9D4] p-3">
+                        <p className="text-sm font-medium text-[#0B1F35] mb-1">
                           Chose: {chosen.label}
                         </p>
-                        <p className="text-sm font-semibold text-white mb-1">
+                        <p className="text-sm font-semibold text-[#0B1F35] mb-1">
                           {chosen.consequence.title}
                         </p>
-                        <p className="text-xs text-white/60 mb-2">
+                        <p className="text-xs text-[#4A5568] mb-2">
                           {chosen.consequence.description}
                         </p>
                         <div className="flex flex-wrap gap-1.5">
@@ -65,7 +65,7 @@ export default function DecisionChain({
                               <span
                                 key={key}
                                 className={`text-[10px] font-mono px-1.5 py-0.5 rounded ${
-                                  isGood ? 'bg-[#3A9E82]/15 text-[#3A9E82]' : 'bg-[#E53E3E]/15 text-[#E53E3E]'
+                                  isGood ? 'bg-[#E8F5F1] text-[#3A9E82]' : 'bg-[#E53E3E]/5 text-[#E53E3E]'
                                 }`}
                               >
                                 {key} {delta}
@@ -75,7 +75,7 @@ export default function DecisionChain({
                         </div>
                       </div>
                     ) : (
-                      <p className="text-xs text-white/40">No decision recorded</p>
+                      <p className="text-xs text-[#718096]">No decision recorded</p>
                     )}
                   </div>
                 );

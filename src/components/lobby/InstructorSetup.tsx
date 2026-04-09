@@ -100,7 +100,7 @@ export default function InstructorSetup({ onSessionCreated }: InstructorSetupPro
 
   return (
     <div className="w-full max-w-lg mx-auto animate-fade-in">
-      <h2 className="text-2xl font-bold text-white mb-6">Create a Session</h2>
+      <h2 className="text-2xl font-bold mb-6">Create a Session</h2>
 
       <div className="space-y-5">
         {/* Instructor Name */}
@@ -111,8 +111,7 @@ export default function InstructorSetup({ onSessionCreated }: InstructorSetupPro
             value={instructorName}
             onChange={(e) => setInstructorName(e.target.value)}
             placeholder="Prof. Smith"
-            className="w-full rounded-xl px-4 py-2.5 text-sm text-white placeholder-white/30 focus:outline-none focus:border-[var(--accent)] transition-colors"
-            style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.08)' }}
+            className="w-full rounded-xl bg-white/5 border border-white/10 px-4 py-2.5 text-sm focus:outline-none focus:border-[var(--accent)] transition-colors"
           />
         </div>
 
@@ -124,8 +123,7 @@ export default function InstructorSetup({ onSessionCreated }: InstructorSetupPro
             value={courseName}
             onChange={(e) => setCourseName(e.target.value)}
             placeholder="Marketing Analytics 301"
-            className="w-full rounded-xl px-4 py-2.5 text-sm text-white placeholder-white/30 focus:outline-none focus:border-[var(--accent)] transition-colors"
-            style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.08)' }}
+            className="w-full rounded-xl bg-white/5 border border-white/10 px-4 py-2.5 text-sm focus:outline-none focus:border-[var(--accent)] transition-colors"
           />
         </div>
 
@@ -135,8 +133,7 @@ export default function InstructorSetup({ onSessionCreated }: InstructorSetupPro
           <select
             value={scenario}
             onChange={(e) => setScenario(e.target.value)}
-            className="w-full rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none focus:border-[var(--accent)] transition-colors appearance-none"
-            style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.08)' }}
+            className="w-full rounded-xl bg-white/5 border border-white/10 px-4 py-2.5 text-sm focus:outline-none focus:border-[var(--accent)] transition-colors appearance-none"
           >
             {SCENARIOS.map((s) => (
               <option key={s.value} value={s.value} className="bg-[#1a1a1a]">
@@ -160,8 +157,7 @@ export default function InstructorSetup({ onSessionCreated }: InstructorSetupPro
               const v = Math.min(6, Math.max(2, parseInt(e.target.value) || 2));
               setTeamSize(v);
             }}
-            className="w-full rounded-xl px-4 py-2.5 text-sm text-white placeholder-white/30 focus:outline-none focus:border-[var(--accent)] transition-colors"
-            style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.08)' }}
+            className="w-full rounded-xl bg-white/5 border border-white/10 px-4 py-2.5 text-sm focus:outline-none focus:border-[var(--accent)] transition-colors"
           />
           {teamSize > 4 && (
             <p className="text-xs text-white/40 mt-1">
@@ -177,15 +173,11 @@ export default function InstructorSetup({ onSessionCreated }: InstructorSetupPro
             {ROUNDS.map((round, i) => (
               <label
                 key={round}
-                className={`flex items-center gap-2 px-4 py-2 rounded-lg cursor-pointer transition-colors text-sm ${
+                className={`flex items-center gap-2 px-4 py-2 rounded-lg border cursor-pointer transition-colors text-sm ${
                   activeRounds.includes(i)
                     ? 'border-[var(--accent)] bg-[var(--accent)]/10 text-white'
-                    : 'text-white/40'
+                    : 'border-white/10 bg-white/5 text-white/40'
                 }`}
-                style={activeRounds.includes(i)
-                  ? { border: '1px solid var(--accent)' }
-                  : { background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.08)' }
-                }
               >
                 <input
                   type="checkbox"
@@ -218,8 +210,7 @@ export default function InstructorSetup({ onSessionCreated }: InstructorSetupPro
           <select
             value={roundDuration ?? ''}
             onChange={(e) => setRoundDuration(e.target.value ? Number(e.target.value) : null)}
-            className="w-full rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none focus:border-[var(--accent)] transition-colors appearance-none"
-            style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.08)' }}
+            className="w-full rounded-xl bg-white/5 border border-white/10 px-4 py-2.5 text-sm focus:outline-none focus:border-[var(--accent)] transition-colors appearance-none"
           >
             <option value="" className="bg-[#1a1a1a]">No timer</option>
             <option value="10" className="bg-[#1a1a1a]">10 minutes</option>
@@ -238,8 +229,7 @@ export default function InstructorSetup({ onSessionCreated }: InstructorSetupPro
         <button
           onClick={handleCreate}
           disabled={loading}
-          className="w-full rounded-xl disabled:opacity-50 disabled:cursor-not-allowed text-white font-semibold px-6 py-3 text-sm transition-all hover:-translate-y-0.5"
-          style={{ background: 'linear-gradient(135deg, #3A9E82, #2D8A6E)', boxShadow: '0 4px 16px rgba(58,158,130,0.3)' }}
+          className="w-full rounded-xl bg-[var(--accent)] hover:bg-[var(--accent)]/90 disabled:opacity-50 disabled:cursor-not-allowed text-white font-semibold px-6 py-3 text-sm transition-colors"
         >
           {loading ? 'Creating...' : 'Create Session'}
         </button>

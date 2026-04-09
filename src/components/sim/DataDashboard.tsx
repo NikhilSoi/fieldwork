@@ -32,23 +32,23 @@ export const TAB_KEY_MAP: Record<string, string> = {
 const SC: Record<string, string> = {
   pos: 'border-l-[#3A9E82] text-[#3A9E82]',
   neg: 'border-l-[#E53E3E] text-[#E53E3E]',
-  neu: 'border-l-white/20 text-white/40',
+  neu: 'border-l-[#A8B8B0] text-[#718096]',
 };
 const SB: Record<string, string> = {
-  pos: 'bg-[#3A9E82]/10',
-  neg: 'bg-[#E53E3E]/10',
-  neu: 'bg-white/[0.03]',
+  pos: 'bg-[#E8F5F1]',
+  neg: 'bg-[#E53E3E]/5',
+  neu: 'bg-[#EEF2EF]',
 };
 
 const chartBase = {
   responsive: true, maintainAspectRatio: false,
   plugins: {
-    legend: { labels: { color: 'rgba(255,255,255,0.6)', font: { size: 11 } } },
-    tooltip: { backgroundColor: 'rgba(0,0,0,0.8)', titleColor: '#F4F7F5', bodyColor: 'rgba(255,255,255,0.7)' },
+    legend: { labels: { color: '#4A5568', font: { size: 11 } } },
+    tooltip: { backgroundColor: '#0B1F35', titleColor: '#F4F7F5', bodyColor: '#D1D9D4' },
   },
   scales: {
-    x: { ticks: { color: 'rgba(255,255,255,0.4)' }, grid: { color: 'rgba(255,255,255,0.06)' } },
-    y: { ticks: { color: 'rgba(255,255,255,0.4)' }, grid: { color: 'rgba(255,255,255,0.06)' } },
+    x: { ticks: { color: '#4A5568' }, grid: { color: '#EEF2EF' } },
+    y: { ticks: { color: '#4A5568' }, grid: { color: '#EEF2EF' } },
   },
 };
 
@@ -231,9 +231,9 @@ export default function DataDashboard({ scenario, roundIdx, tabData, onTabChange
   if (activeTab === 'Decisions') {
     return (
       <div className="flex flex-col gap-4 w-full">
-        <div className="flex gap-1 border-b border-white/[0.08] pb-0 overflow-x-auto rounded-t-lg" style={{ background: 'rgba(255,255,255,0.02)' }}>
+        <div className="flex gap-1 bg-white border-b border-[#D1D9D4] pb-0 overflow-x-auto rounded-t-lg">
           {TAB_NAMES.map(t => (
-            <button key={t} onClick={() => switchTab(t)} className={`px-4 py-2.5 text-sm font-medium transition-colors whitespace-nowrap ${activeTab === t ? 'text-[#3A9E82] border-b-2 border-[#3A9E82]' : 'text-white/40 hover:text-white/70'}`} style={activeTab === t ? { background: 'rgba(58,158,130,0.15)' } : {}}>{t}</button>
+            <button key={t} onClick={() => switchTab(t)} className={`px-4 py-2.5 text-sm font-medium transition-colors whitespace-nowrap ${activeTab === t ? 'text-[#3A9E82] border-b-2 border-[#3A9E82]' : 'text-[#718096] hover:text-[#0B1F35]'}`}>{t}</button>
           ))}
         </div>
         <DecisionsSoFarTab scenario={scenario} pastDecisions={pastDecisions ?? []} />
@@ -254,14 +254,14 @@ export default function DataDashboard({ scenario, roundIdx, tabData, onTabChange
     <div className="flex flex-col gap-4 w-full">
       <div className="flex gap-1 bg-white border-b border-[#D1D9D4] pb-0 overflow-x-auto rounded-t-lg">
         {TAB_NAMES.map(t => (
-          <button key={t} onClick={() => switchTab(t)} className={`px-4 py-2.5 text-sm font-medium transition-colors whitespace-nowrap ${activeTab === t ? 'text-[#3A9E82] border-b-2 border-[#3A9E82]' : 'text-white/40 hover:text-white'}`}>{t}</button>
+          <button key={t} onClick={() => switchTab(t)} className={`px-4 py-2.5 text-sm font-medium transition-colors whitespace-nowrap ${activeTab === t ? 'text-[#3A9E82] border-b-2 border-[#3A9E82]' : 'text-[#718096] hover:text-[#0B1F35]'}`}>{t}</button>
         ))}
       </div>
 
       {/* Primary signal banner — P&L tab only */}
       {activeTab === 'P&L' && primarySignal && (
-        <div className="rounded-lg px-4 py-3" style={{ background: 'rgba(217,119,6,0.1)', border: '1px solid rgba(217,119,6,0.3)' }}>
-          <p className="text-sm font-semibold text-[#F59E0B]">
+        <div className="rounded-lg bg-[#FFF8E1] border border-[#F59E0B]/30 px-4 py-3">
+          <p className="text-sm font-semibold text-[#92400E]">
             Biggest issue: {primarySignal.metric} is {primarySignal.value} — {primarySignal.why}
           </p>
         </div>
@@ -270,9 +270,9 @@ export default function DataDashboard({ scenario, roundIdx, tabData, onTabChange
       {displayKpis.length > 0 && (
         <div className="grid grid-cols-5 gap-3">
           {displayKpis.map((k, i) => (
-            <div key={i} className={`rounded-2xl border-l-4 p-3 transition-all duration-200 hover:border-[#3A9E82]/40 ${SC[k.sentiment]} ${SB[k.sentiment]}`} style={{ background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.1)', backdropFilter: 'blur(8px)' }}>
-              <div className="text-xs text-white/40 mb-1 truncate">{k.label}</div>
-              <div className="text-lg font-semibold text-white">{k.value}</div>
+            <div key={i} className={`rounded-lg border border-[#D1D9D4] border-l-4 p-3 bg-white ${SC[k.sentiment]} ${SB[k.sentiment]}`}>
+              <div className="text-xs text-[#718096] mb-1 truncate">{k.label}</div>
+              <div className="text-lg font-semibold text-[#0B1F35]">{k.value}</div>
               <div className="text-xs mt-1">{k.delta}</div>
             </div>
           ))}
@@ -280,7 +280,7 @@ export default function DataDashboard({ scenario, roundIdx, tabData, onTabChange
       )}
 
       {cfg && (
-        <div className="rounded-2xl p-4" style={{ height: 360, background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.08)', backdropFilter: 'blur(8px)' }}>
+        <div className="bg-white rounded-lg border border-[#D1D9D4] p-4" style={{ height: 360 }}>
           <Chart data={cfg.data} options={cfg.options} />
         </div>
       )}
@@ -299,8 +299,8 @@ export default function DataDashboard({ scenario, roundIdx, tabData, onTabChange
         const worst = validEntries.reduce((a: any, b: any) => (b.value < a.value ? b : a));
 
         return (
-          <div className="rounded-2xl px-4 py-3" style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.08)' }}>
-            <p className="text-sm text-white/60">
+          <div className="rounded-lg bg-[#F4F7F5] border border-[#D1D9D4] px-4 py-3">
+            <p className="text-sm text-[#4A5568]">
               Your best cohort ({best.month}) retained {best.value}% at month 1.
               Your weakest ({worst.month}) retained {worst.value}%.
               {best.value - worst.value > 5 && ` Something changed in ${worst.month} — the data doesn't explain what.`}
@@ -321,10 +321,10 @@ export default function DataDashboard({ scenario, roundIdx, tabData, onTabChange
           ? [{ key: 'category', label: 'Category' }, { key: 'briefs', label: 'Briefs', fmt: true }, { key: 'hireRate', label: 'Hire Rate' }, { key: 'avgValue', label: 'Avg Value' }, { key: 'ttHire', label: 'Time to Hire' }]
           : [{ key: 'segment', label: 'Segment' }, { key: 'subs', label: 'Subs', fmt: true }, { key: 'openRate', label: 'Open Rate' }, { key: 'ctor', label: 'CTOR' }, { key: 'sponsorCtr', label: 'Sponsor CTR' }];
         return (
-          <table className="w-full text-sm text-left rounded-2xl overflow-hidden" style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.08)' }}>
-            <thead><tr className="border-b border-white/[0.08] bg-white/[0.04]">{cols.map(c => <th key={c.key} className="py-2 px-4 text-white/50 font-medium">{c.label}</th>)}</tr></thead>
+          <table className="w-full text-sm text-left bg-white rounded-lg border border-[#D1D9D4] overflow-hidden">
+            <thead><tr className="border-b border-[#D1D9D4] bg-[#EEF2EF]">{cols.map(c => <th key={c.key} className="py-2 px-4 text-[#4A5568] font-medium">{c.label}</th>)}</tr></thead>
             <tbody>{rows.map((r: any, i: number) => (
-              <tr key={i} className="border-b border-white/[0.06]">{cols.map((c, ci) => <td key={c.key} className={`py-2 px-4 ${ci === 0 ? 'text-white font-medium' : 'text-white/60'}`}>{c.fmt ? r[c.key]?.toLocaleString() : r[c.key]}</td>)}</tr>
+              <tr key={i} className="border-b border-[#EEF2EF]">{cols.map((c, ci) => <td key={c.key} className={`py-2 px-4 ${ci === 0 ? 'text-[#0B1F35] font-medium' : 'text-[#4A5568]'}`}>{c.fmt ? r[c.key]?.toLocaleString() : r[c.key]}</td>)}</tr>
             ))}</tbody>
           </table>
         );
@@ -344,14 +344,14 @@ export default function DataDashboard({ scenario, roundIdx, tabData, onTabChange
           : [{ key: 'name', label: 'Channel' }, { key: 'spend', label: 'Spend', pound: true }, { key: 'newSubs', label: 'New Subs' }, { key: 'cps', label: 'CPS' }, { key: 'openRate', label: 'Open Rate' }];
         const cols: any[] = hasRevenue ? [...baseCols, { key: '_costPer1', label: 'Cost per £1' }] : baseCols;
         return (
-          <table className="w-full text-sm text-left rounded-2xl overflow-hidden" style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.08)' }}>
-            <thead><tr className="border-b border-white/[0.08] bg-white/[0.04]">{cols.map((c: any) => <th key={c.key} className="py-2 px-4 text-white/50 font-medium">{c.label}</th>)}</tr></thead>
+          <table className="w-full text-sm text-left bg-white rounded-lg border border-[#D1D9D4] overflow-hidden">
+            <thead><tr className="border-b border-[#D1D9D4] bg-[#EEF2EF]">{cols.map((c: any) => <th key={c.key} className="py-2 px-4 text-[#4A5568] font-medium">{c.label}</th>)}</tr></thead>
             <tbody>{ch.map((c: any, i: number) => {
               const costPer1 = c.revenue && c.spend > 0 ? `£${(c.spend / c.revenue).toFixed(2)}` : c.spend === 0 ? '£0.00' : '—';
               const costVal = parseFloat(costPer1.replace('£', ''));
               return (
-                <tr key={i} className="border-b border-white/[0.06]">{cols.map((col: any, ci: number) => (
-                  <td key={col.key} className={`py-2 px-4 ${ci === 0 ? 'text-white font-medium' : col.key === '_costPer1' ? (costVal > 0.5 ? 'text-[#E53E3E] font-medium' : 'text-[#3A9E82] font-medium') : 'text-white/60'}`}>
+                <tr key={i} className="border-b border-[#EEF2EF]">{cols.map((col: any, ci: number) => (
+                  <td key={col.key} className={`py-2 px-4 ${ci === 0 ? 'text-[#0B1F35] font-medium' : col.key === '_costPer1' ? (costVal > 0.5 ? 'text-[#E53E3E] font-medium' : 'text-[#3A9E82] font-medium') : 'text-[#4A5568]'}`}>
                     {col.key === '_costPer1' ? `${costPer1} per £1 revenue` : col.pound && typeof c[col.key] === 'number' ? `\u00a3${c[col.key]?.toLocaleString()}` : typeof c[col.key] === 'number' ? c[col.key]?.toLocaleString() : c[col.key]}
                   </td>
                 ))}</tr>
@@ -394,8 +394,8 @@ export default function DataDashboard({ scenario, roundIdx, tabData, onTabChange
           if (total > 0) {
             const pcts = revValues.map((v: number) => Math.round((v / total) * 100));
             revBar = (
-              <div className="rounded-2xl p-3 mb-3" style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.08)' }}>
-                <p className="text-xs text-white/40 mb-2 font-medium">Revenue by segment</p>
+              <div className="rounded-lg bg-white border border-[#D1D9D4] p-3 mb-3">
+                <p className="text-xs text-[#718096] mb-2 font-medium">Revenue by segment</p>
                 <div className="flex h-6 rounded-md overflow-hidden">
                   {seg.map((s: any, i: number) => (
                     pcts[i] > 0 && (
@@ -418,15 +418,15 @@ export default function DataDashboard({ scenario, roundIdx, tabData, onTabChange
         return (
           <>
             {revBar}
-            <table className="w-full text-sm text-left rounded-2xl overflow-hidden" style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.08)' }}>
-              <thead><tr className="border-b border-white/[0.08] bg-white/[0.04]">{cols.map(c => <th key={c.key} className="py-2 px-4 text-white/50 font-medium">{c.label}</th>)}</tr></thead>
+            <table className="w-full text-sm text-left bg-white rounded-lg border border-[#D1D9D4] overflow-hidden">
+              <thead><tr className="border-b border-[#D1D9D4] bg-[#EEF2EF]">{cols.map(c => <th key={c.key} className="py-2 px-4 text-[#4A5568] font-medium">{c.label}</th>)}</tr></thead>
               <tbody>{seg.map((s: any, i: number) => (
-                <tr key={i} className="border-b border-white/[0.06]">{cols.map((col, ci) => (
-                  <td key={col.key} className={`py-2 px-4 ${ci === 0 ? 'text-white' : col.small ? 'text-white/40 text-xs' : 'text-white/60'}`}>
+                <tr key={i} className="border-b border-[#EEF2EF]">{cols.map((col, ci) => (
+                  <td key={col.key} className={`py-2 px-4 ${ci === 0 ? 'text-[#0B1F35]' : col.small ? 'text-[#718096] text-xs' : 'text-[#4A5568]'}`}>
                     {ci === 0 ? (
                       <div>
                         <div className="font-medium">{s[col.key]}</div>
-                        {RFM_DEFINITIONS[s[col.key]] && <div className="text-[10px] text-white/40 mt-0.5">{RFM_DEFINITIONS[s[col.key]]}</div>}
+                        {RFM_DEFINITIONS[s[col.key]] && <div className="text-[10px] text-[#718096] mt-0.5">{RFM_DEFINITIONS[s[col.key]]}</div>}
                       </div>
                     ) : col.fmt ? s[col.key]?.toLocaleString() : s[col.key]}
                   </td>
@@ -439,10 +439,10 @@ export default function DataDashboard({ scenario, roundIdx, tabData, onTabChange
 
       {/* ── Benchmarks table ── */}
       {activeTab === 'Benchmarks' && td?.metrics && (
-        <table className="w-full text-sm text-left rounded-2xl overflow-hidden" style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.08)' }}>
-          <thead><tr className="border-b border-white/[0.08] bg-white/[0.04]"><th className="py-2 px-4 text-white/60 font-medium">Metric</th><th className="py-2 px-4 text-white/60 font-medium">Company</th><th className="py-2 px-4 text-white/60 font-medium">Category</th><th className="py-2 px-4 text-white/60 font-medium">Top</th><th className="py-2 px-4 text-white/60 font-medium">Gap</th></tr></thead>
+        <table className="w-full text-sm text-left bg-white rounded-lg border border-[#D1D9D4] overflow-hidden">
+          <thead><tr className="border-b border-[#D1D9D4] bg-[#EEF2EF]"><th className="py-2 px-4 text-[#4A5568] font-medium">Metric</th><th className="py-2 px-4 text-[#4A5568] font-medium">Company</th><th className="py-2 px-4 text-[#4A5568] font-medium">Category</th><th className="py-2 px-4 text-[#4A5568] font-medium">Top</th><th className="py-2 px-4 text-[#4A5568] font-medium">Gap</th></tr></thead>
           <tbody>{td.metrics.map((m: any, i: number) => (
-            <tr key={i} className="border-b border-white/[0.06]"><td className="py-2 px-4 text-white font-medium">{m.metric}</td><td className="py-2 px-4 text-white/60">{m.company}</td><td className="py-2 px-4 text-white/60">{m.category}</td><td className="py-2 px-4 text-white/60">{m.top}</td><td className={`py-2 px-4 text-xs font-medium ${m.gap === 'Severe' ? 'text-[#E53E3E]' : m.gap === 'Significant' ? 'text-[#D97706]' : m.gap === 'Above avg' ? 'text-[#3A9E82]' : 'text-white/40'}`}>{m.gap}</td></tr>
+            <tr key={i} className="border-b border-[#EEF2EF]"><td className="py-2 px-4 text-[#0B1F35] font-medium">{m.metric}</td><td className="py-2 px-4 text-[#4A5568]">{m.company}</td><td className="py-2 px-4 text-[#4A5568]">{m.category}</td><td className="py-2 px-4 text-[#4A5568]">{m.top}</td><td className={`py-2 px-4 text-xs font-medium ${m.gap === 'Severe' ? 'text-[#E53E3E]' : m.gap === 'Significant' ? 'text-[#D97706]' : m.gap === 'Above avg' ? 'text-[#3A9E82]' : 'text-[#718096]'}`}>{m.gap}</td></tr>
           ))}</tbody>
         </table>
       )}

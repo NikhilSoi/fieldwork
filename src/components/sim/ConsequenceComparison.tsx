@@ -12,24 +12,24 @@ export default function ConsequenceComparison({ projectedOption, actualOption, m
   if (!projectedOption) return null;
 
   return (
-    <div className="rounded-2xl p-4" style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.08)' }}>
+    <div className="rounded-lg border border-[#D1D9D4] bg-white p-4">
       <div className="grid grid-cols-2 gap-4 mb-3">
         <div>
-          <p className="text-xs text-white/40 font-medium mb-1">Your projection</p>
-          <p className="text-sm font-semibold text-white">{projectedOption.label}</p>
+          <p className="text-xs text-[#718096] font-medium mb-1">Your projection</p>
+          <p className="text-sm font-semibold text-[#0B1F35]">{projectedOption.label}</p>
         </div>
         <div>
-          <p className="text-xs text-white/40 font-medium mb-1">What happened</p>
-          <p className="text-sm font-semibold text-white">{actualOption.label}</p>
+          <p className="text-xs text-[#718096] font-medium mb-1">What happened</p>
+          <p className="text-sm font-semibold text-[#0B1F35]">{actualOption.label}</p>
         </div>
       </div>
 
       {matched ? (
-        <p className="text-sm font-medium text-[#3A9E82] rounded-2xl px-3 py-2" style={{ background: 'rgba(58,158,130,0.1)' }}>
+        <p className="text-sm font-medium text-[#3A9E82] bg-[#E8F5F1] rounded-md px-3 py-2">
           Your analysis pointed to the right constraint.
         </p>
       ) : (
-        <p className="text-sm font-medium text-[#D97706] rounded-2xl px-3 py-2" style={{ background: 'rgba(217,119,6,0.1)' }}>
+        <p className="text-sm font-medium text-[#D97706] bg-[#FFF8E1] rounded-md px-3 py-2">
           Your individual analysis differed from the team&apos;s final call.
         </p>
       )}

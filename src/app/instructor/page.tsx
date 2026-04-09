@@ -261,8 +261,7 @@ export default function InstructorPage() {
   if (phase === 'setup') {
     return (
       <main
-        className="min-h-screen text-white flex"
-        style={{ background: 'linear-gradient(135deg, #0B1F35 0%, #0d2a45 100%)' }}
+        className="min-h-screen bg-[#F4F7F5] text-[#0B1F35] flex"
         role="main"
         aria-label="Instructor session setup"
       >
@@ -271,7 +270,7 @@ export default function InstructorPage() {
           <div className="max-w-lg mx-auto animate-fade-in">
             <Link
               href="/"
-              className="text-white/60 hover:text-white text-sm mb-8 inline-flex items-center gap-1.5 transition-colors"
+              className="text-[#4A5568] hover:text-[#0B1F35] text-sm mb-8 inline-flex items-center gap-1.5 transition-colors"
               aria-label="Back to home"
             >
               <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
@@ -281,12 +280,12 @@ export default function InstructorPage() {
             </Link>
 
             <h1 className="font-display text-3xl font-bold mb-1.5">New session</h1>
-            <p className="text-white/40 text-sm mb-10">Configure your Fieldwork simulation</p>
+            <p className="text-[#718096] text-sm mb-10">Configure your Fieldwork simulation</p>
 
             <div className="space-y-6">
               {/* Instructor Name */}
               <div>
-                <label htmlFor="instructor-name" className="text-sm text-white/60 mb-1.5 block">
+                <label htmlFor="instructor-name" className="text-sm text-[#4A5568] mb-1.5 block">
                   Instructor name
                 </label>
                 <input
@@ -296,14 +295,13 @@ export default function InstructorPage() {
                   onChange={(e) => setInstructorName(e.target.value)}
                   placeholder="Prof. Smith"
                   aria-required="true"
-                  className="w-full rounded-xl px-4 py-3 text-sm text-white placeholder-white/30 focus:outline-none transition-colors"
-                  style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.08)' }}
+                  className="w-full bg-white border border-[#D1D9D4] rounded-xl px-4 py-3 text-sm text-[#0B1F35] placeholder:text-[#718096] focus:border-[#3A9E82] focus:outline-none transition-colors"
                 />
               </div>
 
               {/* Course Name */}
               <div>
-                <label htmlFor="course-name" className="text-sm text-white/60 mb-1.5 block">
+                <label htmlFor="course-name" className="text-sm text-[#4A5568] mb-1.5 block">
                   Course name
                 </label>
                 <input
@@ -313,14 +311,13 @@ export default function InstructorPage() {
                   onChange={(e) => setCourseName(e.target.value)}
                   placeholder="Marketing Analytics 301"
                   aria-required="true"
-                  className="w-full rounded-xl px-4 py-3 text-sm text-white placeholder-white/30 focus:outline-none transition-colors"
-                  style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.08)' }}
+                  className="w-full bg-white border border-[#D1D9D4] rounded-xl px-4 py-3 text-sm text-[#0B1F35] placeholder:text-[#718096] focus:border-[#3A9E82] focus:outline-none transition-colors"
                 />
               </div>
 
               {/* Scenario Selector */}
               <fieldset>
-                <legend className="text-sm text-white/60 mb-3 block">Scenario</legend>
+                <legend className="text-sm text-[#4A5568] mb-3 block">Scenario</legend>
                 <div className="grid grid-cols-2 gap-3" role="radiogroup" aria-label="Select scenario">
                   {(Object.entries(SCENARIOS) as [ScenarioKey, typeof SCENARIOS[ScenarioKey]][]).map(([key, s]) => {
                     const isSelected = scenario === key;
@@ -332,10 +329,10 @@ export default function InstructorPage() {
                         aria-checked={isSelected}
                         aria-label={`${s.name} - ${s.type}`}
                         onClick={() => setScenario(key)}
-                        className={`relative text-left rounded-xl p-4 transition-colors ${
+                        className={`relative text-left rounded-xl border p-4 transition-colors ${
                           isSelected
-                            ? 'border border-[#3A9E82] bg-[#3A9E82]/10'
-                            : 'border border-white/[0.08] hover:border-[#3A9E82]/50'
+                            ? 'border-[#3A9E82] bg-[#3A9E82]/5'
+                            : 'border-[#D1D9D4] hover:border-[#3A9E82]/50'
                         }`}
                       >
                         {isSelected && (
@@ -346,14 +343,14 @@ export default function InstructorPage() {
                             </svg>
                           </div>
                         )}
-                        <p className="font-semibold text-sm text-white mb-1">{s.name}</p>
+                        <p className="font-semibold text-sm text-[#0B1F35] mb-1">{s.name}</p>
                         <span
                           className="text-[10px] uppercase tracking-wider px-2 py-0.5 rounded-full font-medium inline-block mb-1.5"
                           style={{ backgroundColor: `${s.color}20`, color: s.color }}
                         >
                           {s.type}
                         </span>
-                        <p className="text-xs text-white/40">{s.desc}</p>
+                        <p className="text-xs text-[#718096]">{s.desc}</p>
                       </button>
                     );
                   })}
@@ -362,7 +359,7 @@ export default function InstructorPage() {
 
               {/* Round Toggles */}
               <fieldset>
-                <legend className="text-sm text-white/60 mb-3 block">Rounds</legend>
+                <legend className="text-sm text-[#4A5568] mb-3 block">Rounds</legend>
                 <div className="flex gap-2" role="group" aria-label="Select active rounds">
                   {ROUND_LABELS.map((label, idx) => {
                     const isActive = activeRounds.includes(idx);
@@ -375,7 +372,7 @@ export default function InstructorPage() {
                         className={`flex-1 rounded-full border px-4 py-2 text-sm font-medium transition-colors ${
                           isActive
                             ? 'bg-[#3A9E82]/10 border-[#3A9E82] text-[#3A9E82]'
-                            : 'border-white/[0.08] text-white/40 hover:border-[#3A9E82]/50'
+                            : 'border-[#D1D9D4] text-[#718096] hover:border-[#3A9E82]/50'
                         }`}
                       >
                         {label}
@@ -387,7 +384,7 @@ export default function InstructorPage() {
 
               {/* Number of Teams */}
               <fieldset>
-                <legend className="text-sm text-white/60 mb-3 block">Number of teams</legend>
+                <legend className="text-sm text-[#4A5568] mb-3 block">Number of teams</legend>
                 <div className="flex gap-2 flex-wrap" role="radiogroup" aria-label="Number of teams">
                   {[2, 3, 4, 5, 6, 7, 8].map((n) => {
                     const isActive = numTeams === n;
@@ -401,7 +398,7 @@ export default function InstructorPage() {
                         className={`rounded-full border px-4 py-2 text-sm font-medium transition-colors min-w-[44px] ${
                           isActive
                             ? 'bg-[#3A9E82]/10 border-[#3A9E82] text-[#3A9E82]'
-                            : 'border-white/[0.08] text-white/40 hover:border-[#3A9E82]/50'
+                            : 'border-[#D1D9D4] text-[#718096] hover:border-[#3A9E82]/50'
                         }`}
                       >
                         {n}
@@ -413,7 +410,7 @@ export default function InstructorPage() {
 
               {/* Members per Team */}
               <fieldset>
-                <legend className="text-sm text-white/60 mb-3 block">Members per team</legend>
+                <legend className="text-sm text-[#4A5568] mb-3 block">Members per team</legend>
                 <div className="flex gap-2 flex-wrap" role="radiogroup" aria-label="Members per team">
                   {[2, 3, 4, 5, 6, 7, 8].map((n) => {
                     const isActive = membersPerTeam === n;
@@ -427,7 +424,7 @@ export default function InstructorPage() {
                         className={`rounded-full border px-4 py-2 text-sm font-medium transition-colors min-w-[44px] ${
                           isActive
                             ? 'bg-[#3A9E82]/10 border-[#3A9E82] text-[#3A9E82]'
-                            : 'border-white/[0.08] text-white/40 hover:border-[#3A9E82]/50'
+                            : 'border-[#D1D9D4] text-[#718096] hover:border-[#3A9E82]/50'
                         }`}
                       >
                         {n}
@@ -439,7 +436,7 @@ export default function InstructorPage() {
 
               {/* Time per Round */}
               <fieldset>
-                <legend className="text-sm text-white/60 mb-3 block">Time per round</legend>
+                <legend className="text-sm text-[#4A5568] mb-3 block">Time per round</legend>
                 <div className="flex gap-2 flex-wrap" role="radiogroup" aria-label="Time per round">
                   {([null, 10, 15, 20, 30] as (number | null)[]).map((mins) => {
                     const isActive = roundDuration === mins;
@@ -454,7 +451,7 @@ export default function InstructorPage() {
                         className={`rounded-full border px-4 py-2 text-sm font-medium transition-colors ${
                           isActive
                             ? 'bg-[#3A9E82]/10 border-[#3A9E82] text-[#3A9E82]'
-                            : 'border-white/[0.08] text-white/40 hover:border-[#3A9E82]/50'
+                            : 'border-[#D1D9D4] text-[#718096] hover:border-[#3A9E82]/50'
                         }`}
                       >
                         {label}
@@ -469,8 +466,7 @@ export default function InstructorPage() {
                 onClick={handleCreateSession}
                 disabled={loading || !instructorName.trim() || !courseName.trim() || activeRounds.length === 0}
                 aria-label="Generate session"
-                className="disabled:opacity-40 disabled:cursor-not-allowed text-white font-semibold w-full py-3.5 rounded-xl transition-colors text-sm mt-2 hover:brightness-110"
-                style={{ background: 'linear-gradient(135deg, #3A9E82, #2D8A6E)', boxShadow: '0 4px 16px rgba(58,158,130,0.3)' }}
+                className="bg-[#3A9E82] hover:bg-[#2D8A6E] disabled:opacity-40 disabled:cursor-not-allowed text-white font-semibold w-full py-3.5 rounded-xl transition-colors text-sm mt-2"
               >
                 {loading ? 'Generating...' : 'Generate session \u2192'}
               </button>
@@ -480,7 +476,7 @@ export default function InstructorPage() {
 
         {/* Right Panel */}
         <aside
-          className="hidden lg:flex w-1/2 border-l border-white/[0.08] items-center justify-center relative overflow-hidden"
+          className="hidden lg:flex w-1/2 border-l border-[#D1D9D4] items-center justify-center relative overflow-hidden"
           aria-label="Session preview panel"
         >
           {!sessionCreated ? (
@@ -489,19 +485,19 @@ export default function InstructorPage() {
               <div
                 className="absolute inset-0 opacity-[0.04]"
                 style={{
-                  backgroundImage: 'linear-gradient(rgba(255,255,255,0.1) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.1) 1px, transparent 1px)',
+                  backgroundImage: 'linear-gradient(#D1D9D4 1px, transparent 1px), linear-gradient(90deg, #D1D9D4 1px, transparent 1px)',
                   backgroundSize: '40px 40px',
                 }}
                 aria-hidden="true"
               />
-              <p className="text-white/40 text-sm font-medium relative z-10">Session preview</p>
+              <p className="text-[#718096] text-sm font-medium relative z-10">Session preview</p>
             </div>
           ) : (
             /* Session created preview */
             <div className="flex flex-col items-center justify-center gap-8 animate-fade-in-scale px-10">
               {/* Session Code */}
               <div className="text-center">
-                <p className="text-white/40 text-xs uppercase tracking-widest mb-3">Session code</p>
+                <p className="text-[#718096] text-xs uppercase tracking-widest mb-3">Session code</p>
                 <p className="font-mono-data text-5xl tracking-[0.3em] text-[#3A9E82] font-bold">
                   {sessionCode}
                 </p>
@@ -510,16 +506,15 @@ export default function InstructorPage() {
               {/* QR Placeholder + Copy */}
               <div className="flex items-center gap-4">
                 <div
-                  className="w-16 h-16 rounded-lg flex items-center justify-center"
-                  style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.08)' }}
+                  className="w-16 h-16 rounded-lg bg-white border border-[#D1D9D4] flex items-center justify-center"
                   aria-label="QR code placeholder"
                 >
-                  <span className="text-white/40 text-xs font-medium">QR</span>
+                  <span className="text-[#718096] text-xs font-medium">QR</span>
                 </div>
                 <button
                   onClick={handleCopyCode}
                   aria-label="Copy session code"
-                  className="rounded-lg border border-white/[0.08] hover:border-[#3A9E82]/50 px-4 py-2 text-sm text-white/60 hover:text-white transition-colors"
+                  className="rounded-lg border border-[#D1D9D4] hover:border-[#3A9E82]/50 px-4 py-2 text-sm text-[#4A5568] hover:text-[#0B1F35] transition-colors"
                 >
                   {codeCopied ? 'Copied!' : 'Copy code'}
                 </button>
@@ -536,7 +531,7 @@ export default function InstructorPage() {
                     >
                       {name[0]}
                     </div>
-                    <span className="text-[10px] text-white/40 max-w-[60px] truncate">{name}</span>
+                    <span className="text-[10px] text-[#718096] max-w-[60px] truncate">{name}</span>
                   </div>
                 ))}
               </div>
@@ -555,26 +550,22 @@ export default function InstructorPage() {
 
         {/* Mobile: after session created, show a bottom sheet */}
         {sessionCreated && (
-          <div
-            className="lg:hidden fixed inset-x-0 bottom-0 p-6 animate-fade-in z-50"
-            style={{ background: 'rgba(11,31,53,0.95)', backdropFilter: 'blur(20px)', borderTop: '1px solid rgba(255,255,255,0.08)' }}
-          >
-            <p className="text-center text-white/40 text-xs uppercase tracking-widest mb-2">Session code</p>
+          <div className="lg:hidden fixed inset-x-0 bottom-0 bg-white border-t border-[#D1D9D4] p-6 animate-fade-in z-50">
+            <p className="text-center text-[#718096] text-xs uppercase tracking-widest mb-2">Session code</p>
             <p className="font-mono-data text-3xl tracking-[0.3em] text-[#3A9E82] font-bold text-center mb-4">
               {sessionCode}
             </p>
             <div className="flex gap-3">
               <button
                 onClick={handleCopyCode}
-                className="flex-1 rounded-xl border border-white/[0.08] py-2.5 text-sm text-white/60 hover:text-white transition-colors"
+                className="flex-1 rounded-xl border border-[#D1D9D4] py-2.5 text-sm text-[#4A5568] hover:text-[#0B1F35] transition-colors"
                 aria-label="Copy session code"
               >
                 {codeCopied ? 'Copied!' : 'Copy code'}
               </button>
               <button
                 onClick={handleOpenDashboard}
-                className="flex-1 rounded-xl py-2.5 text-sm text-white font-semibold transition-colors hover:brightness-110"
-                style={{ background: 'linear-gradient(135deg, #3A9E82, #2D8A6E)', boxShadow: '0 4px 16px rgba(58,158,130,0.3)' }}
+                className="flex-1 rounded-xl bg-[#3A9E82] hover:bg-[#2D8A6E] py-2.5 text-sm text-white font-semibold transition-colors"
                 aria-label="Open dashboard"
               >
                 Open dashboard &rarr;
@@ -590,16 +581,12 @@ export default function InstructorPage() {
   if (phase === 'lobby') {
     return (
       <main
-        className="min-h-screen text-white flex flex-col"
-        style={{ background: 'linear-gradient(135deg, #0B1F35 0%, #0d2a45 100%)' }}
+        className="min-h-screen bg-[#F4F7F5] text-[#0B1F35] flex flex-col"
         role="main"
         aria-label="Session lobby"
       >
         {/* Top Bar */}
-        <header
-          className="px-6 py-4"
-          style={{ background: 'rgba(11,31,53,0.8)', backdropFilter: 'blur(20px)', borderBottom: '1px solid rgba(255,255,255,0.06)' }}
-        >
+        <header className="border-b border-[#D1D9D4] px-6 py-4">
           <div className="max-w-5xl mx-auto flex items-center justify-between">
             <div className="flex items-center gap-4">
               <p className="font-mono-data text-xl tracking-[0.2em] text-[#3A9E82] font-bold">
@@ -613,7 +600,7 @@ export default function InstructorPage() {
               </span>
             </div>
             <div className="flex items-center gap-5">
-              <span className="text-sm text-white/60">
+              <span className="text-sm text-[#4A5568]">
                 {instructorName} &middot; {courseName}
               </span>
               <div className="flex items-center gap-1.5" aria-label="Session is live">
@@ -636,8 +623,7 @@ export default function InstructorPage() {
                 return (
                   <article
                     key={team.id}
-                    className="rounded-2xl p-5 relative overflow-hidden"
-                    style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.08)', backdropFilter: 'blur(12px)', borderRadius: '16px' }}
+                    className="rounded-xl bg-white border border-[#D1D9D4] p-5 relative overflow-hidden"
                     aria-label={`Team ${team.name}`}
                   >
                     {/* Colored left border */}
@@ -648,13 +634,13 @@ export default function InstructorPage() {
                     />
 
                     <div className="flex items-center justify-between mb-4">
-                      <h3 className="font-semibold text-sm text-white">{team.name}</h3>
+                      <h3 className="font-semibold text-sm text-[#0B1F35]">{team.name}</h3>
                       {hasMembers ? (
-                        <span className="text-[10px] uppercase tracking-wider px-2 py-0.5 rounded-full bg-[#3A9E82]/15 text-[#3A9E82] font-medium">
+                        <span className="text-[10px] uppercase tracking-wider px-2 py-0.5 rounded-full bg-[#3A9E82]/10 text-[#3A9E82] font-medium">
                           Ready
                         </span>
                       ) : (
-                        <span className="text-[10px] uppercase tracking-wider px-2 py-0.5 rounded-full bg-white/[0.04] text-white/40 font-medium">
+                        <span className="text-[10px] uppercase tracking-wider px-2 py-0.5 rounded-full bg-[#475569]/10 text-[#718096] font-medium">
                           Waiting
                         </span>
                       )}
@@ -677,13 +663,13 @@ export default function InstructorPage() {
                       {Array.from({ length: emptySlots }).map((_, i) => (
                         <div
                           key={`empty-${i}`}
-                          className="w-8 h-8 rounded-full border-2 border-dashed border-white/[0.08]"
+                          className="w-8 h-8 rounded-full border-2 border-dashed border-[#D1D9D4]"
                           aria-hidden="true"
                         />
                       ))}
                     </div>
 
-                    <p className="text-xs text-white/40">
+                    <p className="text-xs text-[#718096]">
                       {team.members.length} / {maxSlots} joined
                     </p>
                   </article>
@@ -699,16 +685,15 @@ export default function InstructorPage() {
                 aria-label="Start simulation"
                 className={`rounded-xl font-semibold px-12 py-3.5 text-sm transition-colors ${
                   allTeamsHaveMembers
-                    ? 'text-white hover:brightness-110'
-                    : 'border border-white/[0.08] text-white/40 cursor-not-allowed'
+                    ? 'bg-[#3A9E82] hover:bg-[#2D8A6E] text-white'
+                    : 'bg-white border border-[#D1D9D4] text-[#718096] cursor-not-allowed'
                 }`}
-                style={allTeamsHaveMembers ? { background: 'linear-gradient(135deg, #3A9E82, #2D8A6E)', boxShadow: '0 4px 16px rgba(58,158,130,0.3)' } : { background: 'rgba(255,255,255,0.04)' }}
               >
                 {loading ? 'Starting...' : 'Start simulation \u2192'}
               </button>
             </div>
             {!allTeamsHaveMembers && (
-              <p className="text-center text-xs text-white/40 mt-3">
+              <p className="text-center text-xs text-[#718096] mt-3">
                 Waiting for at least 1 member per team
               </p>
             )}
@@ -721,28 +706,24 @@ export default function InstructorPage() {
   // ===== PHASE 3: DASHBOARD =====
   return (
     <main
-      className="min-h-screen text-white flex flex-col"
-      style={{ background: 'linear-gradient(135deg, #0B1F35 0%, #0d2a45 100%)' }}
+      className="min-h-screen bg-[#F4F7F5] text-[#0B1F35] flex flex-col"
       role="main"
       aria-label="Instructor dashboard"
     >
       {/* Top Bar */}
-      <header
-        className="px-6 py-4"
-        style={{ background: 'rgba(11,31,53,0.8)', backdropFilter: 'blur(20px)', borderBottom: '1px solid rgba(255,255,255,0.06)' }}
-      >
+      <header className="border-b border-[#D1D9D4] px-6 py-4">
         <div className="max-w-7xl mx-auto flex items-center justify-between">
           <div>
-            <h1 className="font-display text-lg font-bold text-white">Instructor Dashboard</h1>
-            <p className="text-white/40 text-xs mt-0.5">
-              <span className="font-mono-data text-white/60">{sessionCode}</span>
+            <h1 className="font-display text-lg font-bold">Instructor Dashboard</h1>
+            <p className="text-[#718096] text-xs mt-0.5">
+              <span className="font-mono-data text-[#4A5568]">{sessionCode}</span>
               {' '}&middot; {scenarioInfo.name} ({scenarioInfo.type})
               {' '}&middot; {instructorName}
             </p>
           </div>
           <Link
             href={`/debrief/${sessionCode}`}
-            className="rounded-xl border border-white/[0.08] hover:border-[#E53E3E]/50 text-white/60 hover:text-[#E53E3E] px-5 py-2 text-sm font-medium transition-colors"
+            className="rounded-xl border border-[#D1D9D4] hover:border-[#E53E3E]/50 text-[#4A5568] hover:text-[#E53E3E] px-5 py-2 text-sm font-medium transition-colors"
             aria-label="End session and go to debrief"
           >
             End &amp; Debrief &rarr;
@@ -768,10 +749,7 @@ export default function InstructorPage() {
 
       {/* Broadcast Bar */}
       {sessionId && (
-        <footer
-          className="border-t border-white/[0.06]"
-          aria-label="Broadcast controls"
-        >
+        <footer className="border-t border-[#D1D9D4]" aria-label="Broadcast controls">
           <div className="max-w-7xl mx-auto">
             <BroadcastBar sessionId={sessionId} />
           </div>

@@ -15,7 +15,7 @@ const SCENARIO_LABELS: Record<string, string> = {
 const STATUS_STYLE: Record<string, string> = {
   lobby: 'bg-[#D97706]/10 text-[#D97706] border-[#D97706]/20',
   active: 'bg-[#3A9E82]/10 text-[#3A9E82] border-[#3A9E82]/20',
-  completed: 'bg-white/10 text-white/70 border-white/20',
+  completed: 'bg-[#0B1F35]/10 text-[#0B1F35] border-[#0B1F35]/20',
 };
 
 interface SessionRow {
@@ -113,16 +113,16 @@ export default function SessionsPage() {
   ).length;
 
   return (
-    <div className="min-h-screen p-6 lg:p-10" style={{ background: 'linear-gradient(135deg, #0B1F35 0%, #0d2a45 100%)' }}>
+    <div className="min-h-screen bg-[#F4F7F5] p-6 lg:p-10">
       <div className="max-w-4xl mx-auto">
         {/* Header */}
         <div className="flex items-center justify-between mb-8">
           <div>
-            <Link href="/" className="text-white/60 hover:text-white text-sm mb-2 inline-block">
+            <Link href="/" className="text-[#4A5568] hover:text-[#0B1F35] text-sm mb-2 inline-block">
               &larr; Home
             </Link>
-            <h1 className="font-display text-3xl font-bold text-white">Past Sessions</h1>
-            <p className="text-white/40 text-sm mt-1">
+            <h1 className="font-display text-3xl font-bold text-[#0B1F35]">Past Sessions</h1>
+            <p className="text-[#718096] text-sm mt-1">
               {sessions.length} session{sessions.length !== 1 ? 's' : ''}
             </p>
           </div>
@@ -130,15 +130,14 @@ export default function SessionsPage() {
             {testSessionCount > 0 && (
               <button
                 onClick={() => setConfirmDeleteAll(true)}
-                className="rounded-xl border border-[#E53E3E]/30 text-[#E53E3E] hover:bg-[#E53E3E]/10 px-4 py-2.5 text-xs font-medium transition-colors"
+                className="rounded-xl border border-[#E53E3E]/30 text-[#E53E3E] hover:bg-[#E53E3E]/5 px-4 py-2.5 text-xs font-medium transition-colors"
               >
                 Delete {testSessionCount} test session{testSessionCount !== 1 ? 's' : ''}
               </button>
             )}
             <Link
               href="/instructor"
-              className="rounded-xl text-white font-semibold px-6 py-2.5 text-sm transition-all hover:-translate-y-0.5"
-              style={{ background: 'linear-gradient(135deg, #3A9E82, #2D8A6E)', boxShadow: '0 4px 16px rgba(58,158,130,0.3)' }}
+              className="rounded-xl bg-[#0B1F35] hover:bg-[#0B1F35]/90 text-white font-semibold px-6 py-2.5 text-sm transition-colors"
             >
               New Session
             </Link>
@@ -152,19 +151,18 @@ export default function SessionsPage() {
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             placeholder="Search by code, instructor, or course..."
-            className="w-full rounded-xl px-4 py-3 text-sm text-white placeholder-white/30 focus:outline-none focus:border-[#3A9E82] transition-colors"
-            style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.08)' }}
+            className="w-full rounded-xl bg-white border border-[#D1D9D4] px-4 py-3 text-sm text-[#0B1F35] placeholder:text-[#718096] focus:outline-none focus:border-[#3A9E82] transition-colors"
           />
         </div>
 
         {/* List */}
         {loading ? (
           <div className="text-center py-16">
-            <div className="animate-pulse-pip text-white/40 text-sm">Loading sessions...</div>
+            <div className="animate-pulse-pip text-[#718096] text-sm">Loading sessions...</div>
           </div>
         ) : filtered.length === 0 ? (
           <div className="text-center py-16">
-            <p className="text-white/40 text-sm">
+            <p className="text-[#718096] text-sm">
               {q ? 'No sessions match your search.' : 'No sessions yet.'}
             </p>
             {!q && (
@@ -194,12 +192,11 @@ export default function SessionsPage() {
               return (
                 <div
                   key={s.id}
-                  className="rounded-2xl p-5 flex flex-col sm:flex-row sm:items-center gap-4"
-                  style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.08)', backdropFilter: 'blur(12px)', borderRadius: '16px' }}
+                  className="rounded-xl bg-white border border-[#D1D9D4] p-5 flex flex-col sm:flex-row sm:items-center gap-4"
                 >
                   {/* Code */}
                   <div className="shrink-0">
-                    <span className="text-2xl font-mono font-bold tracking-widest text-white">
+                    <span className="text-2xl font-mono font-bold tracking-widest text-[#0B1F35]">
                       {s.code}
                     </span>
                   </div>
@@ -207,21 +204,21 @@ export default function SessionsPage() {
                   {/* Details */}
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-2 flex-wrap">
-                      <span className="text-sm font-medium text-white">{label}</span>
+                      <span className="text-sm font-medium text-[#0B1F35]">{label}</span>
                       <span
                         className={`text-[10px] uppercase tracking-wider font-semibold px-2 py-0.5 rounded border ${
-                          STATUS_STYLE[s.status] ?? 'bg-white/[0.04] text-white/40 border-white/[0.08]'
+                          STATUS_STYLE[s.status] ?? 'bg-[#EEF2EF] text-[#718096] border-[#D1D9D4]'
                         }`}
                       >
                         {s.status}
                       </span>
                     </div>
-                    <div className="text-xs text-white/60 mt-1">
+                    <div className="text-xs text-[#4A5568] mt-1">
                       {s.instructor_name && <span>{s.instructor_name}</span>}
                       {s.instructor_name && s.course_name && <span> &middot; </span>}
                       {s.course_name && <span>{s.course_name}</span>}
                     </div>
-                    <div className="text-xs text-white/40 mt-0.5">
+                    <div className="text-xs text-[#718096] mt-0.5">
                       {dateStr} at {timeStr} &middot; {s.teamCount} team{s.teamCount !== 1 ? 's' : ''} &middot; {s.memberCount} student{s.memberCount !== 1 ? 's' : ''}
                     </div>
                   </div>
@@ -230,21 +227,19 @@ export default function SessionsPage() {
                   <div className="flex items-center gap-2 shrink-0">
                     <Link
                       href={`/session/${s.code}`}
-                      className="rounded-lg border border-white/[0.12] hover:border-[#3A9E82] text-white/60 hover:text-[#3A9E82] px-4 py-2 text-xs transition-colors"
-                      style={{ background: 'rgba(255,255,255,0.06)' }}
+                      className="rounded-lg border border-[#D1D9D4] hover:border-[#3A9E82] text-[#4A5568] hover:text-[#3A9E82] px-4 py-2 text-xs transition-colors"
                     >
                       View Session
                     </Link>
                     <Link
                       href={`/debrief/${s.code}`}
-                      className="rounded-lg text-white/60 hover:text-[#3A9E82] px-4 py-2 text-xs transition-colors"
-                      style={{ background: 'rgba(58,158,130,0.15)', border: '1px solid rgba(255,255,255,0.12)' }}
+                      className="rounded-lg bg-[#EEF2EF] hover:bg-[#E8F5F1] border border-[#D1D9D4] text-[#4A5568] hover:text-[#3A9E82] px-4 py-2 text-xs transition-colors"
                     >
                       Debrief
                     </Link>
                     <button
                       onClick={() => setConfirmDelete(s)}
-                      className="p-2 rounded-lg text-white/30 hover:text-[#E53E3E] hover:bg-[#E53E3E]/10 transition-colors"
+                      className="p-2 rounded-lg text-[#A8B8B0] hover:text-[#E53E3E] hover:bg-[#E53E3E]/5 transition-colors"
                       title="Delete session"
                     >
                       <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
@@ -261,20 +256,19 @@ export default function SessionsPage() {
 
       {/* Delete single session modal */}
       {confirmDelete && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm p-4">
-          <div className="rounded-2xl shadow-xl max-w-md w-full p-6" style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.08)', backdropFilter: 'blur(12px)', borderRadius: '16px' }}>
-            <h3 className="font-display font-bold text-lg text-white mb-2">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/30 backdrop-blur-sm p-4">
+          <div className="bg-white rounded-2xl border border-[#D1D9D4] shadow-xl max-w-md w-full p-6">
+            <h3 className="font-display font-bold text-lg text-[#0B1F35] mb-2">
               Delete session {confirmDelete.code}?
             </h3>
-            <p className="text-sm text-white/60 mb-6">
+            <p className="text-sm text-[#4A5568] mb-6">
               This will permanently remove all teams, members, votes, and decisions for this session. This cannot be undone.
             </p>
             <div className="flex gap-3 justify-end">
               <button
                 onClick={() => setConfirmDelete(null)}
                 disabled={deleting}
-                className="rounded-xl px-5 py-2.5 text-sm font-medium text-white/60 hover:bg-white/[0.04] transition-colors"
-                style={{ background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.12)' }}
+                className="rounded-xl border border-[#D1D9D4] px-5 py-2.5 text-sm font-medium text-[#4A5568] hover:bg-[#EEF2EF] transition-colors"
               >
                 Cancel
               </button>
@@ -292,15 +286,15 @@ export default function SessionsPage() {
 
       {/* Delete all test sessions modal */}
       {confirmDeleteAll && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm p-4">
-          <div className="rounded-2xl shadow-xl max-w-md w-full p-6" style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.08)', backdropFilter: 'blur(12px)', borderRadius: '16px' }}>
-            <h3 className="font-display font-bold text-lg text-white mb-2">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/30 backdrop-blur-sm p-4">
+          <div className="bg-white rounded-2xl border border-[#D1D9D4] shadow-xl max-w-md w-full p-6">
+            <h3 className="font-display font-bold text-lg text-[#0B1F35] mb-2">
               Delete {testSessionCount} test session{testSessionCount !== 1 ? 's' : ''}?
             </h3>
-            <p className="text-sm text-white/60 mb-2">
+            <p className="text-sm text-[#4A5568] mb-2">
               This will delete all sessions where:
             </p>
-            <ul className="text-sm text-white/60 mb-6 list-disc list-inside space-y-1">
+            <ul className="text-sm text-[#4A5568] mb-6 list-disc list-inside space-y-1">
               <li>Instructor name is missing</li>
               <li>Course name is missing</li>
               <li>Status is still &ldquo;lobby&rdquo; (never started)</li>
@@ -312,8 +306,7 @@ export default function SessionsPage() {
               <button
                 onClick={() => setConfirmDeleteAll(false)}
                 disabled={deleting}
-                className="rounded-xl px-5 py-2.5 text-sm font-medium text-white/60 hover:bg-white/[0.04] transition-colors"
-                style={{ background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.12)' }}
+                className="rounded-xl border border-[#D1D9D4] px-5 py-2.5 text-sm font-medium text-[#4A5568] hover:bg-[#EEF2EF] transition-colors"
               >
                 Cancel
               </button>

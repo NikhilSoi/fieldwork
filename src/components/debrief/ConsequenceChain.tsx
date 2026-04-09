@@ -18,7 +18,7 @@ function parseDeltaDirection(delta: string): 'up' | 'down' | 'flat' {
 
 function deltaColor(delta: string, key: string): string {
   const dir = parseDeltaDirection(delta);
-  if (dir === 'flat') return 'text-white/40';
+  if (dir === 'flat') return 'text-[#718096]';
   const positive = dir === 'up';
   const good = isLowerBetter(key) ? !positive : positive;
   return good ? 'text-[#3A9E82]' : 'text-[#E53E3E]';
@@ -26,10 +26,10 @@ function deltaColor(delta: string, key: string): string {
 
 function deltaBgColor(delta: string, key: string): string {
   const dir = parseDeltaDirection(delta);
-  if (dir === 'flat') return 'bg-white/[0.04]';
+  if (dir === 'flat') return 'bg-white';
   const positive = dir === 'up';
   const good = isLowerBetter(key) ? !positive : positive;
-  return good ? 'bg-[#3A9E82]/15' : 'bg-[#E53E3E]/15';
+  return good ? 'bg-[#E8F5F1]' : 'bg-[#E53E3E]/5';
 }
 
 export default function ConsequenceChain({
@@ -41,7 +41,7 @@ export default function ConsequenceChain({
   const base = BASE_KPIS[scenario];
   if (!base) {
     return (
-      <div className="rounded-2xl p-6 text-center text-white/40" style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.08)', backdropFilter: 'blur(12px)', borderRadius: '16px' }}>
+      <div className="rounded-xl border border-[#D1D9D4] bg-white p-6 text-center text-[#718096]">
         No KPI data available for scenario.
       </div>
     );
@@ -97,19 +97,19 @@ export default function ConsequenceChain({
     <div className="space-y-4">
       <div className="flex items-center gap-2 mb-2">
         <span className="w-3 h-3 rounded-full" style={{ backgroundColor: team.color }} />
-        <h3 className="text-lg font-bold text-white">{team.name} — KPI Trajectory</h3>
+        <h3 className="text-lg font-bold text-[#0B1F35]">{team.name} — KPI Trajectory</h3>
       </div>
 
       <div className="overflow-x-auto">
         <div className="flex items-stretch gap-0 min-w-[640px]">
           {/* Base column */}
-          <div className="flex-shrink-0 w-36 rounded-l-2xl p-3" style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.08)' }}>
-            <p className="text-xs text-white/40 mb-2 font-mono">Start</p>
+          <div className="flex-shrink-0 w-36 rounded-l-xl border border-[#D1D9D4] bg-white p-3">
+            <p className="text-xs text-[#718096] mb-2 font-mono">Start</p>
             <div className="space-y-2">
               {kpiNames.map((k) => (
                 <div key={k}>
-                  <p className="text-[10px] text-white/40 uppercase tracking-wide">{k}</p>
-                  <p className="text-sm font-mono font-semibold text-white">{formatKPI(k, base[k])}</p>
+                  <p className="text-[10px] text-[#718096] uppercase tracking-wide">{k}</p>
+                  <p className="text-sm font-mono font-semibold text-[#0B1F35]">{formatKPI(k, base[k])}</p>
                 </div>
               ))}
             </div>
@@ -121,25 +121,22 @@ export default function ConsequenceChain({
             return (
               <div key={snap.roundKey} className="flex items-stretch">
                 <div className="flex items-center px-1">
-                  <svg className="w-6 h-6 text-white/40" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+                  <svg className="w-6 h-6 text-[#718096]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
                     <path strokeLinecap="round" strokeLinejoin="round" d="M13 7l5 5m0 0l-5 5m5-5H6" />
                   </svg>
                 </div>
 
-                <div
-                  className={`flex-shrink-0 w-44 p-3 ${isLast ? 'rounded-r-2xl' : ''}`}
-                  style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.08)' }}
-                >
-                  <p className="text-xs text-white/40 font-mono capitalize mb-2">{snap.roundKey}</p>
+                <div className={`flex-shrink-0 w-44 border border-[#D1D9D4] bg-white p-3 ${isLast ? 'rounded-r-xl' : ''}`}>
+                  <p className="text-xs text-[#718096] font-mono capitalize mb-2">{snap.roundKey}</p>
 
                   <div className="space-y-2">
                     {kpiNames.map((k) => {
                       const delta = snap.deltas[k];
                       return (
                         <div key={k}>
-                          <p className="text-[10px] text-white/40 uppercase tracking-wide">{k}</p>
+                          <p className="text-[10px] text-[#718096] uppercase tracking-wide">{k}</p>
                           <div className="flex items-center gap-1.5">
-                            <span className="text-sm font-mono font-semibold text-white">
+                            <span className="text-sm font-mono font-semibold text-[#0B1F35]">
                               {formatKPI(k, snap.kpis[k])}
                             </span>
                             {delta && (
@@ -154,7 +151,7 @@ export default function ConsequenceChain({
                   </div>
 
                   {!snap.hasDecision && (
-                    <p className="text-[10px] text-white/40 mt-2 text-center">--</p>
+                    <p className="text-[10px] text-[#718096] mt-2 text-center">--</p>
                   )}
                 </div>
               </div>
@@ -164,8 +161,8 @@ export default function ConsequenceChain({
       </div>
 
       {/* Cumulative summary */}
-      <div className="rounded-2xl bg-white/[0.04] p-4" style={{ border: '1px solid rgba(255,255,255,0.08)', borderRadius: '16px' }}>
-        <p className="text-xs text-white/40 mb-2 font-mono">Cumulative Impact</p>
+      <div className="rounded-xl border border-[#D1D9D4] bg-[#EEF2EF] p-4">
+        <p className="text-xs text-[#718096] mb-2 font-mono">Cumulative Impact</p>
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
           {kpiNames.map((k) => {
             const start = base[k];
@@ -179,11 +176,11 @@ export default function ConsequenceChain({
 
             return (
               <div key={k} className="text-center">
-                <p className="text-[10px] text-white/40 uppercase tracking-wide">{k}</p>
-                <p className="text-sm font-mono font-semibold mt-0.5 text-white">
+                <p className="text-[10px] text-[#718096] uppercase tracking-wide">{k}</p>
+                <p className="text-sm font-mono font-semibold mt-0.5 text-[#0B1F35]">
                   {formatKPI(k, start)} &rarr; {formatKPI(k, end)}
                 </p>
-                <p className={`text-xs font-mono mt-0.5 ${dir === 'flat' ? 'text-white/40' : good ? 'text-[#3A9E82]' : 'text-[#E53E3E]'}`}>
+                <p className={`text-xs font-mono mt-0.5 ${dir === 'flat' ? 'text-[#718096]' : good ? 'text-[#3A9E82]' : 'text-[#E53E3E]'}`}>
                   {pctStr}
                 </p>
               </div>

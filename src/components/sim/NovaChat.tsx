@@ -265,12 +265,12 @@ export default function NovaChat({
   };
 
   return (
-    <div className="flex flex-col h-full rounded-2xl" style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.08)' }}>
+    <div className="flex flex-col h-full bg-white rounded-lg border border-[#D1D9D4]">
       {/* Header */}
-      <div className="flex items-center gap-2 px-4 py-3" style={{ borderBottom: '1px solid rgba(255,255,255,0.08)' }}>
+      <div className="flex items-center gap-2 px-4 py-3 border-b border-[#D1D9D4]">
         <div className="w-2 h-2 rounded-full bg-[#3A9E82] animate-pulse" />
-        <span className="text-sm font-medium text-white">Nova</span>
-        <span className="text-xs text-white/40">AI Assistant</span>
+        <span className="text-sm font-medium text-[#0B1F35]">Nova</span>
+        <span className="text-xs text-[#718096]">AI Assistant</span>
       </div>
 
       {/* Messages */}
@@ -280,7 +280,7 @@ export default function NovaChat({
         style={{ minHeight: 200, maxHeight: 400 }}
       >
         {messages.length === 0 && (
-          <div className="text-white/40 text-sm text-center mt-8">
+          <div className="text-[#718096] text-sm text-center mt-8">
             Ask Nova about the data, strategy, or your team&apos;s decision.
           </div>
         )}
@@ -292,32 +292,27 @@ export default function NovaChat({
               msg.role === 'user' ? 'items-end' : 'items-start'
             }`}
           >
-            <span className="text-[10px] text-white/30 mb-1">
+            <span className="text-[10px] text-[#718096] mb-1">
               {msg.author ?? (msg.role === 'assistant' ? 'Nova' : activeMember)}
             </span>
             <div
-              className={`max-w-[85%] rounded-2xl px-3 py-2 text-sm leading-relaxed ${
+              className={`max-w-[85%] rounded-lg px-3 py-2 text-sm leading-relaxed ${
                 msg.role === 'user'
-                  ? 'text-white'
-                  : 'text-white/80'
+                  ? 'bg-[#E8F5F1] text-[#0B1F35] border border-[#3A9E82]/20'
+                  : 'bg-[#EEF2EF] text-[#0B1F35] border border-[#D1D9D4]'
               }`}
-              style={
-                msg.role === 'user'
-                  ? { background: 'rgba(58,158,130,0.15)', border: '1px solid rgba(58,158,130,0.3)' }
-                  : { background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.08)' }
-              }
             >
               {msg.content}
               {streaming && msg.role === 'assistant' && i === messages.length - 1 && (
                 <span className="inline-flex ml-1">
-                  <span className="w-1 h-1 rounded-full bg-white/40 animate-bounce" style={{ animationDelay: '0ms' }} />
-                  <span className="w-1 h-1 rounded-full bg-white/40 animate-bounce ml-0.5" style={{ animationDelay: '150ms' }} />
-                  <span className="w-1 h-1 rounded-full bg-white/40 animate-bounce ml-0.5" style={{ animationDelay: '300ms' }} />
+                  <span className="w-1 h-1 rounded-full bg-[#718096] animate-bounce" style={{ animationDelay: '0ms' }} />
+                  <span className="w-1 h-1 rounded-full bg-[#718096] animate-bounce ml-0.5" style={{ animationDelay: '150ms' }} />
+                  <span className="w-1 h-1 rounded-full bg-[#718096] animate-bounce ml-0.5" style={{ animationDelay: '300ms' }} />
                 </span>
               )}
             </div>
             {msg.isAutoFire && msg.role === 'assistant' && (
-              <span className="text-[9px] text-white/20 mt-1 italic">Nova opened this round</span>
+              <span className="text-[9px] text-[#718096]/70 mt-1 italic">Nova opened this round</span>
             )}
           </div>
         ))}
@@ -326,8 +321,7 @@ export default function NovaChat({
       {/* Input */}
       <form
         onSubmit={handleSubmit}
-        className="flex gap-2 px-4 py-3"
-        style={{ borderTop: '1px solid rgba(255,255,255,0.08)' }}
+        className="flex gap-2 px-4 py-3 border-t border-[#D1D9D4]"
       >
         <input
           type="text"
@@ -335,14 +329,12 @@ export default function NovaChat({
           onChange={(e) => setInput(e.target.value)}
           placeholder="Ask Nova a question..."
           disabled={streaming}
-          className="flex-1 rounded-2xl px-3 py-2 text-sm text-white placeholder-white/30 focus:outline-none disabled:opacity-50"
-          style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.08)' }}
+          className="flex-1 bg-[#F4F7F5] border border-[#D1D9D4] rounded-lg px-3 py-2 text-sm text-[#0B1F35] placeholder-[#718096] focus:outline-none focus:border-[#3A9E82] disabled:opacity-50"
         />
         <button
           type="submit"
           disabled={streaming || !input.trim()}
-          className="px-4 py-2 text-white text-sm font-medium rounded-2xl disabled:opacity-40 disabled:cursor-not-allowed transition-all hover:-translate-y-0.5"
-          style={{ background: 'linear-gradient(135deg, #3A9E82, #2D8A6E)', boxShadow: '0 4px 16px rgba(58,158,130,0.3)' }}
+          className="px-4 py-2 bg-[#3A9E82] text-white text-sm font-medium rounded-lg hover:bg-[#2D8A6E] disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
         >
           Send
         </button>
