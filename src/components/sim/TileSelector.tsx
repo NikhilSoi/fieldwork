@@ -20,14 +20,14 @@ export default function TileSelector({ options, selectedIdx, onSelect }: Props) 
           <button
             key={idx}
             onClick={() => onSelect(idx)}
-            className={`flex flex-col text-left p-4 rounded-lg border-2 transition-all cursor-pointer hover:border-[#3A9E82]/50 ${
-              isSelected
-                ? 'border-[#3A9E82] bg-[#E8F5F1]'
-                : 'border-[#D1D9D4] bg-white'
-            }`}
+            className="flex flex-col text-left p-4 rounded-2xl border-2 transition-all cursor-pointer"
+            style={{
+              background: isSelected ? 'rgba(58,158,130,0.15)' : 'rgba(255,255,255,0.04)',
+              borderColor: isSelected ? '#3A9E82' : 'rgba(255,255,255,0.08)',
+            }}
           >
-            <span className="text-sm font-semibold text-[#0B1F35] mb-1">{opt.label}</span>
-            <span className="text-xs text-[#718096] line-clamp-2">{shortDesc}</span>
+            <span className="text-sm font-semibold text-white mb-1">{opt.label}</span>
+            <span className="text-xs text-white/40 line-clamp-2">{shortDesc}</span>
           </button>
         );
       })}

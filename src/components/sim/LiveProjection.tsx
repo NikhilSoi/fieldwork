@@ -19,17 +19,17 @@ export default function LiveProjection({ options, allocations, totalBudget, thre
   const projectedOption = hasWinner ? options[maxIdx] : null;
 
   return (
-    <div className="rounded-lg border border-[#D1D9D4] bg-[#FAFBFA] p-3">
-      <p className="text-xs text-[#718096] font-medium uppercase tracking-wider mb-2">
+    <div className="rounded-2xl p-3" style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.08)' }}>
+      <p className="text-xs text-white/40 font-medium uppercase tracking-wider mb-2">
         Based on your current allocation...
       </p>
 
       {projectedOption ? (
         <>
-          <p className="text-sm font-semibold text-[#0B1F35] mb-1">
+          <p className="text-sm font-semibold text-white mb-1">
             &rarr; {projectedOption.label}
           </p>
-          <p className="text-sm text-[#4A5568] mb-2">
+          <p className="text-sm text-white/60 mb-2">
             Likely outcome: {projectedOption.consequence.title}
           </p>
           <div className="flex flex-wrap gap-1.5">
@@ -42,7 +42,7 @@ export default function LiveProjection({ options, allocations, totalBudget, thre
                 <span
                   key={key}
                   className={`text-xs font-medium px-2 py-0.5 rounded-full ${
-                    isGood ? 'bg-[#E8F5F1] text-[#3A9E82]' : 'bg-[#E53E3E]/5 text-[#E53E3E]'
+                    isGood ? 'bg-[#3A9E82]/15 text-[#3A9E82]' : 'bg-[#E53E3E]/15 text-[#E53E3E]'
                   }`}
                 >
                   {key} {delta}
@@ -57,7 +57,7 @@ export default function LiveProjection({ options, allocations, totalBudget, thre
         </p>
       )}
 
-      <p className="text-[10px] text-[#A8B8B0] mt-2 italic">
+      <p className="text-[10px] text-white/20 mt-2 italic">
         This updates as you allocate. Lock in to confirm.
       </p>
     </div>

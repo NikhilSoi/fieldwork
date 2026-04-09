@@ -4,25 +4,25 @@
 
 :root {
   /* Backgrounds */
-  --color-bg-primary: #F4F7F5;
-  --color-bg-secondary: #EEF2EF;
+  --color-bg-primary: #0B1F35;
+  --color-bg-secondary: #111E2D;
   --color-bg-dark: #0B1F35;
-  --color-bg-elevated: #FFFFFF;
+  --color-bg-elevated: rgba(255,255,255,0.04);
 
   /* Text */
-  --color-text-primary: #0B1F35;
-  --color-text-secondary: #4A5568;
-  --color-text-muted: #718096;
-  --color-text-inverse: #F4F7F5;
+  --color-text-primary: #F4F7F5;
+  --color-text-secondary: rgba(255,255,255,0.7);
+  --color-text-muted: rgba(255,255,255,0.4);
+  --color-text-inverse: #0B1F35;
 
   /* Accent */
   --color-accent: #3A9E82;
   --color-accent-hover: #2D8A6E;
-  --color-accent-light: #E8F5F1;
+  --color-accent-light: rgba(58,158,130,0.15);
 
   /* Borders */
-  --color-border: #D1D9D4;
-  --color-border-strong: #A8B8B0;
+  --color-border: rgba(255,255,255,0.08);
+  --color-border-strong: rgba(255,255,255,0.15);
 
   /* Semantic */
   --color-success: #3A9E82;
@@ -30,27 +30,28 @@
   --color-warning: #D97706;
 
   /* Legacy compat */
-  --background: #F4F7F5;
-  --foreground: #0B1F35;
+  --background: #0B1F35;
+  --foreground: #F4F7F5;
 }
 
 /* ─── Base ──────────────────── */
 body {
   color: var(--color-text-primary);
-  background: var(--color-bg-primary);
+  background: linear-gradient(135deg, #0B1F35 0%, #0d2a45 100%);
   font-family: var(--font-inter), var(--font-geist-sans), system-ui, -apple-system, sans-serif;
+  min-height: 100vh;
 }
 
 /* ─── Scrollbar ─────────────── */
 ::-webkit-scrollbar { width: 6px; height: 6px; }
 ::-webkit-scrollbar-track { background: transparent; }
-::-webkit-scrollbar-thumb { background: #A8B8B0; border-radius: 3px; }
-::-webkit-scrollbar-thumb:hover { background: #718096; }
+::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.15); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,0.25); }
 
 /* ─── Selection ─────────────── */
 ::selection {
-  background: rgba(58, 158, 130, 0.2);
-  color: #0B1F35;
+  background: rgba(58, 158, 130, 0.3);
+  color: #F4F7F5;
 }
 
 /* ─── Focus ─────────────────── */
@@ -112,31 +113,30 @@ button:disabled, a[aria-disabled="true"] {
 /* ─── Grid background ───────── */
 .bg-grid {
   background-image:
-    linear-gradient(rgba(58, 158, 130, 0.06) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(58, 158, 130, 0.06) 1px, transparent 1px);
-  background-size: 40px 40px;
+    radial-gradient(rgba(58, 158, 130, 0.08) 1px, transparent 1px);
+  background-size: 32px 32px;
 }
 .bg-grid-animated {
   background-image:
-    linear-gradient(rgba(58, 158, 130, 0.08) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(58, 158, 130, 0.08) 1px, transparent 1px);
-  background-size: 40px 40px;
+    radial-gradient(rgba(58, 158, 130, 0.08) 1px, transparent 1px);
+  background-size: 32px 32px;
   animation: gridMove 8s linear infinite;
 }
 
-/* ─── Card styles ───────────── */
+/* ─── Card styles (glassmorphic) ── */
 .card {
-  background: var(--color-bg-elevated);
-  border: 1px solid var(--color-border);
-  border-radius: 12px;
-  box-shadow: 0 1px 3px rgba(11, 31, 53, 0.04);
+  background: rgba(255,255,255,0.04);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 16px;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.06);
 }
 .card-hover {
   transition: border-color 0.2s, box-shadow 0.2s;
 }
 .card-hover:hover {
-  border-color: var(--color-accent);
-  box-shadow: 0 4px 12px rgba(58, 158, 130, 0.08);
+  border-color: rgba(58,158,130,0.4);
+  box-shadow: 0 0 16px rgba(58,158,130,0.15);
 }
 
 /* ─── Font utility classes ──── */

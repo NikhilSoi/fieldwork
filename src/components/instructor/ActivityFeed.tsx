@@ -49,16 +49,22 @@ export default function ActivityFeed({ events }: ActivityFeedProps) {
 
   if (events.length === 0) {
     return (
-      <div className="rounded-xl border border-[#D1D9D4] bg-white p-6 text-center text-[#718096]">
+      <div
+        className="rounded-2xl p-6 text-center text-white/40"
+        style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.08)', backdropFilter: 'blur(12px)', borderRadius: '16px' }}
+      >
         No activity yet.
       </div>
     );
   }
 
   return (
-    <div className="rounded-xl border border-[#D1D9D4] bg-white overflow-hidden">
-      <div className="px-4 py-3 border-b border-[#D1D9D4]">
-        <h3 className="text-sm font-semibold text-[#4A5568]">Activity Feed</h3>
+    <div
+      className="rounded-2xl overflow-hidden"
+      style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.08)', backdropFilter: 'blur(12px)', borderRadius: '16px' }}
+    >
+      <div className="px-4 py-3 border-b border-white/[0.06]">
+        <h3 className="text-sm font-semibold text-white/60">Activity Feed</h3>
       </div>
 
       <div
@@ -70,19 +76,19 @@ export default function ActivityFeed({ events }: ActivityFeedProps) {
           return (
             <div
               key={i}
-              className="flex items-start gap-2.5 px-2 py-1.5 rounded-lg hover:bg-[#EEF2EF] transition-colors animate-fade-in"
+              className="flex items-start gap-2.5 px-2 py-1.5 rounded-lg hover:bg-white/[0.04] transition-colors animate-fade-in"
             >
-              <span className="text-[10px] text-[#718096] font-mono mt-0.5 flex-shrink-0 w-16">
+              <span className="text-[10px] text-white/40 font-mono mt-0.5 flex-shrink-0 w-16">
                 {formatTime(event.time)}
               </span>
               <span
                 className="w-2 h-2 rounded-full mt-1.5 flex-shrink-0"
                 style={{ backgroundColor: color }}
               />
-              <span className="text-xs text-[#718096] flex-shrink-0 w-4 text-center mt-0.5">
+              <span className="text-xs text-white/40 flex-shrink-0 w-4 text-center mt-0.5">
                 {eventIcon(event.type)}
               </span>
-              <span className="text-sm text-[#4A5568]">{event.message}</span>
+              <span className="text-sm text-white/60">{event.message}</span>
             </div>
           );
         })}

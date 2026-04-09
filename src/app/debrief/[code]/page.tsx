@@ -193,8 +193,8 @@ export default function DebriefPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-[#F4F7F5] flex items-center justify-center">
-        <div className="animate-pulse-pip text-[#718096] text-sm">Loading debrief...</div>
+      <div className="min-h-screen flex items-center justify-center" style={{ background: 'linear-gradient(135deg, #0B1F35 0%, #0d2a45 100%)' }}>
+        <div className="animate-pulse-pip text-white/40 text-sm">Loading debrief...</div>
       </div>
     );
   }
@@ -233,33 +233,33 @@ export default function DebriefPage() {
   teamRankings.forEach((t, i) => { t.rank = i + 1; });
 
   return (
-    <div className="min-h-screen bg-[#F4F7F5] p-6 lg:p-10">
+    <div className="min-h-screen p-6 lg:p-10" style={{ background: 'linear-gradient(135deg, #0B1F35 0%, #0d2a45 100%)' }}>
       <div className="max-w-5xl mx-auto">
         {/* Header */}
         <div className="text-center mb-12">
-          <p className="text-[#718096] text-xs uppercase tracking-widest mb-2">Simulation Complete</p>
-          <h1 className="text-4xl font-bold text-[#0B1F35] mb-2">Debrief</h1>
-          <p className="text-[#4A5568] text-sm">{scenarioLabel} &middot; Session {code}</p>
+          <p className="text-white/40 text-xs uppercase tracking-widest mb-2">Simulation Complete</p>
+          <h1 className="text-4xl font-bold text-white mb-2">Debrief</h1>
+          <p className="text-white/60 text-sm">{scenarioLabel} &middot; Session {code}</p>
         </div>
 
         {/* KPI Trajectory Leaderboard */}
-        <div className="rounded-xl bg-white border border-[#D1D9D4] p-8 mb-8">
-          <h2 className="text-sm font-semibold text-[#4A5568] uppercase tracking-wide mb-2 text-center">
+        <div className="rounded-2xl p-8 mb-8" style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.08)', backdropFilter: 'blur(12px)', borderRadius: '16px' }}>
+          <h2 className="text-sm font-semibold text-white/60 uppercase tracking-wide mb-2 text-center">
             How each team&apos;s decisions shaped their outcomes
           </h2>
-          <p className="text-xs text-[#718096] text-center mb-6">
+          <p className="text-xs text-white/40 text-center mb-6">
             Ranked by overall KPI trajectory improvement
           </p>
           <ScoreHero teams={teamRankings} />
         </div>
 
         {/* Decision & Consequence Chain */}
-        <div className="rounded-xl bg-white border border-[#D1D9D4] p-8 mb-8">
-          <h2 className="text-sm font-semibold text-[#4A5568] uppercase tracking-wide mb-6">
+        <div className="rounded-2xl p-8 mb-8" style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.08)', backdropFilter: 'blur(12px)', borderRadius: '16px' }}>
+          <h2 className="text-sm font-semibold text-white/60 uppercase tracking-wide mb-6">
             What each team chose — and what happened next
           </h2>
           {teams.length === 0 ? (
-            <p className="text-[#718096] text-sm">No team data available.</p>
+            <p className="text-white/40 text-sm">No team data available.</p>
           ) : (
             <div className="space-y-8">
               {teams.map((team) => {
@@ -278,12 +278,12 @@ export default function DebriefPage() {
         </div>
 
         {/* KPI Trajectory Chain */}
-        <div className="rounded-xl bg-white border border-[#D1D9D4] p-8 mb-8">
-          <h2 className="text-sm font-semibold text-[#4A5568] uppercase tracking-wide mb-6">
+        <div className="rounded-2xl p-8 mb-8" style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.08)', backdropFilter: 'blur(12px)', borderRadius: '16px' }}>
+          <h2 className="text-sm font-semibold text-white/60 uppercase tracking-wide mb-6">
             KPI Trajectory
           </h2>
           {teams.length === 0 ? (
-            <p className="text-[#718096] text-sm">No team data available.</p>
+            <p className="text-white/40 text-sm">No team data available.</p>
           ) : (
             <div className="space-y-8">
               {teams.map((team) => {
@@ -303,12 +303,12 @@ export default function DebriefPage() {
         </div>
 
         {/* Nova Analysis */}
-        <div className="rounded-xl bg-white border border-[#D1D9D4] p-8 mb-8">
-          <h2 className="text-sm font-semibold text-[#4A5568] uppercase tracking-wide mb-6">
+        <div className="rounded-2xl p-8 mb-8" style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.08)', backdropFilter: 'blur(12px)', borderRadius: '16px' }}>
+          <h2 className="text-sm font-semibold text-white/60 uppercase tracking-wide mb-6">
             Nova Analysis
           </h2>
           {teams.length === 0 ? (
-            <p className="text-[#718096] text-sm">No team data available.</p>
+            <p className="text-white/40 text-sm">No team data available.</p>
           ) : (
             <div className="space-y-8">
               {teams.map((team) => {
@@ -327,7 +327,7 @@ export default function DebriefPage() {
         </div>
 
         {/* Class Patterns */}
-        <div className="rounded-xl bg-white border border-[#D1D9D4] p-8 mb-8">
+        <div className="rounded-2xl p-8 mb-8" style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.08)', backdropFilter: 'blur(12px)', borderRadius: '16px' }}>
           <ClassPatterns
             teams={teams}
             decisions={decisions}
@@ -337,7 +337,7 @@ export default function DebriefPage() {
 
         {/* Facilitation Notes */}
         {facilitation.length > 0 && (
-          <div className="rounded-xl bg-[#0B1F35] p-8 mb-8">
+          <div className="rounded-2xl p-8 mb-8" style={{ background: 'rgba(11,31,53,0.8)', backdropFilter: 'blur(20px)', border: '1px solid rgba(255,255,255,0.06)', borderRadius: '16px' }}>
             <h2 className="text-sm font-semibold text-white/60 uppercase tracking-wide mb-6">
               Facilitation Notes
             </h2>
@@ -368,7 +368,8 @@ export default function DebriefPage() {
         <div className="text-center mt-4 mb-8">
           <Link
             href="/"
-            className="inline-block rounded-xl bg-[#0B1F35] hover:bg-[#0B1F35]/90 text-white font-semibold px-8 py-3 text-sm transition-colors"
+            className="inline-block rounded-2xl text-white font-semibold px-8 py-3 text-sm transition-colors hover:opacity-90"
+            style={{ background: 'linear-gradient(135deg, #3A9E82, #2D8A6E)', boxShadow: '0 4px 16px rgba(58,158,130,0.3)' }}
           >
             &larr; Back to Home
           </Link>

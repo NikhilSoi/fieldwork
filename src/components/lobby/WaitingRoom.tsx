@@ -79,12 +79,13 @@ export default function WaitingRoom({ session, teams, onStart }: WaitingRoomProp
       <div className="text-center mb-8">
         <p className="text-sm text-white/50 mb-2">Session Code</p>
         <div className="flex items-center justify-center gap-3">
-          <span className="text-5xl font-bold font-mono tracking-[0.3em]">
+          <span className="text-5xl font-bold font-mono tracking-[0.3em] text-white">
             {session.code}
           </span>
           <button
             onClick={copyCode}
-            className="rounded-lg border border-white/20 hover:border-white/40 px-3 py-1.5 text-xs transition-colors"
+            className="rounded-lg px-3 py-1.5 text-xs text-white/60 hover:text-white transition-colors"
+            style={{ background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.12)' }}
           >
             {copied ? 'Copied!' : 'Copy'}
           </button>
@@ -106,8 +107,8 @@ export default function WaitingRoom({ session, teams, onStart }: WaitingRoomProp
           return (
             <div
               key={team.id}
-              className="rounded-xl border border-white/10 bg-white/5 p-4"
-              style={{ borderLeftColor: team.color, borderLeftWidth: 3 }}
+              className="rounded-2xl p-4"
+              style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.08)', backdropFilter: 'blur(12px)', borderRadius: '16px', borderLeftColor: team.color, borderLeftWidth: 3 }}
             >
               <div className="flex items-center justify-between mb-3">
                 <div className="flex items-center gap-2">
@@ -115,7 +116,7 @@ export default function WaitingRoom({ session, teams, onStart }: WaitingRoomProp
                     className="w-3 h-3 rounded-full"
                     style={{ backgroundColor: team.color }}
                   />
-                  <span className="font-semibold text-sm">{team.name}</span>
+                  <span className="font-semibold text-sm text-white">{team.name}</span>
                 </div>
                 <span className="text-xs text-white/40">
                   {teamMembers.length} member{teamMembers.length !== 1 ? 's' : ''}
@@ -129,7 +130,7 @@ export default function WaitingRoom({ session, teams, onStart }: WaitingRoomProp
                   {teamMembers.map((m) => (
                     <span
                       key={m.id}
-                      className="text-xs bg-white/10 rounded-md px-2 py-1 animate-fade-in"
+                      className="text-xs bg-white/10 text-white rounded-md px-2 py-1 animate-fade-in"
                     >
                       {m.display_name || m.name || 'Student'}
                     </span>
@@ -146,7 +147,8 @@ export default function WaitingRoom({ session, teams, onStart }: WaitingRoomProp
         <button
           onClick={handleStart}
           disabled={!allTeamsHaveMembers || starting}
-          className="rounded-xl bg-[var(--accent-green)] hover:bg-[var(--accent-green)]/90 disabled:opacity-40 disabled:cursor-not-allowed text-white font-semibold px-10 py-3 text-sm transition-colors"
+          className="rounded-xl disabled:opacity-40 disabled:cursor-not-allowed text-white font-semibold px-10 py-3 text-sm transition-all hover:-translate-y-0.5"
+          style={{ background: 'linear-gradient(135deg, #3A9E82, #2D8A6E)', boxShadow: '0 4px 16px rgba(58,158,130,0.3)' }}
         >
           {starting ? 'Starting...' : 'Start Simulation'}
         </button>

@@ -296,8 +296,8 @@ export default function SessionPage() {
   /* ── Loading state ── */
   if (loading) {
     return (
-      <div className="min-h-screen bg-[#F4F7F5] flex items-center justify-center">
-        <div className="font-display text-lg text-[#718096] animate-pulse">
+      <div className="min-h-screen flex items-center justify-center" style={{ background: 'linear-gradient(135deg, #0B1F35 0%, #0d2a45 100%)' }}>
+        <div className="font-display text-lg text-white/40 animate-pulse">
           Loading simulation...
         </div>
       </div>
@@ -307,9 +307,9 @@ export default function SessionPage() {
   /* ── Not found state ── */
   if (!session) {
     return (
-      <div className="min-h-screen bg-[#F4F7F5] flex items-center justify-center">
+      <div className="min-h-screen flex items-center justify-center" style={{ background: 'linear-gradient(135deg, #0B1F35 0%, #0d2a45 100%)' }}>
         <div className="card p-8 text-center space-y-4">
-          <p className="text-[#0B1F35] font-display text-lg">Session not found</p>
+          <p className="text-white font-display text-lg">Session not found</p>
           <Link
             href="/"
             className="inline-block text-[#3A9E82] hover:text-[#2D8A6E] text-sm transition-colors"
@@ -322,10 +322,10 @@ export default function SessionPage() {
   }
 
   return (
-    <div className="min-h-screen bg-[#F4F7F5] text-[#0B1F35] animate-fade-in">
+    <div className="min-h-screen text-white animate-fade-in bg-grid" style={{ background: 'linear-gradient(135deg, #0B1F35 0%, #0d2a45 100%)', backgroundAttachment: 'fixed' }}>
 
       {/* ── Top Bar ── */}
-      <header className="fixed top-0 left-0 right-0 z-50 h-14 bg-white/80 backdrop-blur-xl border-b border-[#D1D9D4] flex items-center justify-between px-4 lg:px-6">
+      <header className="fixed top-0 left-0 right-0 z-50 h-14 flex items-center justify-between px-4 lg:px-6" style={{ background: 'rgba(11,31,53,0.8)', backdropFilter: 'blur(20px)', borderBottom: '1px solid rgba(255,255,255,0.06)' }}>
         <div className="flex items-center gap-2.5 min-w-0">
           {team && (
             <span
@@ -333,14 +333,14 @@ export default function SessionPage() {
               style={{ backgroundColor: team.color }}
             />
           )}
-          <span className="font-semibold text-sm truncate text-[#0B1F35]">
+          <span className="font-semibold text-sm truncate text-white">
             {team?.name || 'Spectator'}
           </span>
-          <span className="text-[#718096]">&middot;</span>
-          <span className="text-[#4A5568] text-sm truncate">
+          <span className="text-white/30">&middot;</span>
+          <span className="text-white/60 text-sm truncate">
             {scenario?.name ?? session.scenario}
           </span>
-          <span className="bg-[#E8F5F1] text-[#3A9E82] text-xs px-2.5 py-0.5 rounded-full font-medium capitalize flex-shrink-0">
+          <span className="text-xs px-2.5 py-0.5 rounded-full font-medium capitalize flex-shrink-0" style={{ background: 'rgba(58,158,130,0.15)', color: '#3A9E82' }}>
             {activeRoundLabels[currentRoundIdx]}
           </span>
           {session.round_duration_minutes && (
@@ -351,12 +351,12 @@ export default function SessionPage() {
           )}
         </div>
 
-        <div className="hidden md:block font-mono-data text-xs text-[#718096] tracking-widest">
+        <div className="hidden md:block font-mono-data text-xs text-white/30 tracking-widest">
           {code}
         </div>
 
         <div className="flex items-center gap-3">
-          <span className="text-sm text-[#4A5568] hidden sm:inline">
+          <span className="text-sm text-white/60 hidden sm:inline">
             {members[activeMemberIdx]?.name ?? `Member ${activeMemberIdx + 1}`}
           </span>
           {session.status === 'active' && (
@@ -420,10 +420,10 @@ export default function SessionPage() {
 
           {/* Nova Chat */}
           <div className="card p-4 flex-1 flex flex-col min-h-[320px]">
-            <div className="flex items-center gap-2 mb-3 pb-3 border-b border-[#D1D9D4]">
+            <div className="flex items-center gap-2 mb-3 pb-3 border-b border-white/[0.08]">
               <span className="w-2 h-2 rounded-full bg-[#3A9E82] animate-pulse" />
-              <span className="font-semibold text-sm text-[#0B1F35]">Nova</span>
-              <span className="text-xs text-[#718096]">AI copilot</span>
+              <span className="font-semibold text-sm text-white">Nova</span>
+              <span className="text-xs text-white/40">AI copilot</span>
             </div>
             <div className="flex-1 min-h-0">
               <NovaChat
@@ -445,7 +445,7 @@ export default function SessionPage() {
       </main>
 
       {/* ── Bottom Bar ── */}
-      <footer className="sticky bottom-0 z-40 bg-white/80 backdrop-blur-xl border-t border-[#D1D9D4] px-6 py-3 flex items-center justify-between">
+      <footer className="sticky bottom-0 z-40 px-6 py-3 flex items-center justify-between" style={{ background: 'rgba(11,31,53,0.8)', backdropFilter: 'blur(20px)', borderTop: '1px solid rgba(255,255,255,0.06)' }}>
         <div>
           <RoundNav
             rounds={activeRoundLabels}
@@ -460,8 +460,8 @@ export default function SessionPage() {
         </div>
 
         <div className="flex items-center gap-2.5">
-          <span className="text-xs text-[#718096] uppercase tracking-wider">Round</span>
-          <span className="font-mono-data text-sm font-bold text-[#0B1F35]">
+          <span className="text-xs text-white/40 uppercase tracking-wider">Round</span>
+          <span className="font-mono-data text-sm font-bold text-white">
             {currentRoundIdx + 1} / {activeRoundOrder.length}
           </span>
         </div>

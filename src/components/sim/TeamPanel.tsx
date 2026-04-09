@@ -254,7 +254,7 @@ export default function TeamPanel({
   if (locked) {
     return (
       <div className="flex flex-col gap-5 w-full">
-        <p className="text-xs text-[#718096] uppercase tracking-wider font-medium">
+        <p className="text-xs text-white/40 uppercase tracking-wider font-medium">
           Decision locked — here is what happened
         </p>
 
@@ -265,15 +265,15 @@ export default function TeamPanel({
           const cons = chosen.consequence;
 
           return (
-            <div key={qIdx} className="rounded-lg border border-[#D1D9D4] bg-[#F4F7F5] p-4">
-              <p className="text-xs text-[#718096] mb-1">Q{qIdx + 1}. {q.question}</p>
-              <p className="text-sm font-medium text-[#0B1F35] mb-2">
+            <div key={qIdx} className="rounded-lg border border-white/[0.08] bg-white/[0.04]/[0.03] p-4">
+              <p className="text-xs text-white/40 mb-1">Q{qIdx + 1}. {q.question}</p>
+              <p className="text-sm font-medium text-white mb-2">
                 Your team chose: {chosen.label}
               </p>
 
-              <div className="rounded-lg bg-white border border-[#D1D9D4] p-3">
-                <p className="text-sm font-semibold text-[#0B1F35] mb-1">{cons.title}</p>
-                <p className="text-sm text-[#4A5568] mb-3">{cons.description}</p>
+              <div className="rounded-lg bg-white/[0.04] border border-white/[0.08] p-3">
+                <p className="text-sm font-semibold text-white mb-1">{cons.title}</p>
+                <p className="text-sm text-white/60 mb-3">{cons.description}</p>
 
                 <div className="flex flex-wrap gap-1.5">
                   {Object.entries(cons.kpiDeltas).map(([key, delta]) => {
@@ -286,10 +286,10 @@ export default function TeamPanel({
                         key={key}
                         className={`text-xs font-medium px-2 py-0.5 rounded-full ${
                           isGood
-                            ? 'bg-[#E8F5F1] text-[#3A9E82]'
+                            ? 'bg-[#3A9E82]/15 text-[#3A9E82]'
                             : isNegative || isPositive
-                            ? 'bg-[#E53E3E]/5 text-[#E53E3E]'
-                            : 'bg-[#EEF2EF] text-[#718096]'
+                            ? 'bg-[#E53E3E]/15 text-[#E53E3E]'
+                            : 'bg-white/[0.06] text-white/40'
                         }`}
                       >
                         {key} {delta}
@@ -314,14 +314,16 @@ export default function TeamPanel({
         {isLastRound ? (
           <a
             href={`/debrief/${sessionCode}`}
-            className="w-full py-3 rounded-lg text-sm font-semibold text-center bg-[#0B1F35] hover:bg-[#0B1F35]/90 text-white transition-all block"
+            className="w-full py-3 rounded-2xl text-sm font-semibold text-center text-white transition-all block hover:-translate-y-0.5"
+            style={{ background: 'linear-gradient(135deg, #3A9E82, #2D8A6E)', boxShadow: '0 4px 16px rgba(58,158,130,0.3)' }}
           >
             View debrief &rarr;
           </a>
         ) : (
           <button
             onClick={onAdvanceRound}
-            className="w-full py-3 rounded-lg text-sm font-semibold bg-[#3A9E82] hover:bg-[#2D8A6E] text-white transition-all cursor-pointer"
+            className="w-full py-3 rounded-2xl text-sm font-semibold text-white transition-all cursor-pointer hover:-translate-y-0.5"
+            style={{ background: 'linear-gradient(135deg, #3A9E82, #2D8A6E)', boxShadow: '0 4px 16px rgba(58,158,130,0.3)' }}
           >
             Continue to {roundLabels[roundIdx + 1]} &rarr;
           </button>
@@ -335,9 +337,9 @@ export default function TeamPanel({
     <div className="flex flex-col gap-4 w-full">
       {/* Round brief */}
       {roundBrief && (
-        <div className="rounded-lg bg-[#F4F7F5] border border-[#D1D9D4] p-3">
-          <p className="text-xs text-[#718096] font-medium uppercase tracking-wider mb-1">Round brief</p>
-          <p className="text-sm text-[#4A5568]">{roundBrief}</p>
+        <div className="rounded-lg bg-white/[0.04]/[0.03] border border-white/[0.08] p-3">
+          <p className="text-xs text-white/40 font-medium uppercase tracking-wider mb-1">Round brief</p>
+          <p className="text-sm text-white/60">{roundBrief}</p>
         </div>
       )}
 
@@ -353,8 +355,8 @@ export default function TeamPanel({
                 onClick={() => onMemberSwitch(idx)}
                 className={`flex items-center gap-1.5 px-3 py-1.5 text-sm font-medium rounded-full transition-all ${
                   isActive
-                    ? 'text-[#0B1F35] ring-2'
-                    : 'text-[#718096] hover:text-[#0B1F35] bg-[#EEF2EF]'
+                    ? 'text-white ring-2'
+                    : 'text-white/40 hover:text-white bg-white/[0.04]'
                 }`}
                 style={{
                   backgroundColor: isActive ? MEMBER_COLORS[idx % MEMBER_COLORS.length] + '20' : undefined,
@@ -376,7 +378,7 @@ export default function TeamPanel({
             );
           })}
         </div>
-        <p className="text-xs text-[#718096] mt-2">
+        <p className="text-xs text-white/40 mt-2">
           {membersVotedCount} of {effectiveMembers.length} members have voted
         </p>
       </div>
@@ -387,9 +389,9 @@ export default function TeamPanel({
         {/* ── BUDGET / RFM ROUND — Q1: Sliders ── */}
         {isBudgetRound && budgetConfig && (
           <>
-            <div className="bg-[#F4F7F5] rounded-lg border border-[#D1D9D4] p-4">
-              <div className="text-sm font-medium text-[#0B1F35] mb-3">
-                <span className="text-[#718096] mr-2">Q1.</span>
+            <div className="bg-white/[0.04]/[0.03] rounded-lg border border-white/[0.08] p-4">
+              <div className="text-sm font-medium text-white mb-3">
+                <span className="text-white/40 mr-2">Q1.</span>
                 {questions[0].question}
               </div>
               <BudgetSliders
@@ -421,12 +423,12 @@ export default function TeamPanel({
 
         {/* ── BUDGET ROUND — Q2: Ratio toggle ── */}
         {round === 'budget' && (
-          <div className="bg-[#F4F7F5] rounded-lg border border-[#D1D9D4] p-4">
-            <div className="text-sm font-medium text-[#0B1F35] mb-3">
-              <span className="text-[#718096] mr-2">Q2.</span>
+          <div className="bg-white/[0.04]/[0.03] rounded-lg border border-white/[0.08] p-4">
+            <div className="text-sm font-medium text-white mb-3">
+              <span className="text-white/40 mr-2">Q2.</span>
               {questions[1].question}
             </div>
-            <div className="bg-white rounded-lg border border-[#D1D9D4] p-4">
+            <div className="bg-white/[0.04] rounded-lg border border-white/[0.08] p-4">
               <input
                 type="range"
                 min={0}
@@ -447,7 +449,7 @@ export default function TeamPanel({
                 {questions[1].options.map((opt, i) => (
                   <span
                     key={i}
-                    className={`text-xs text-center ${q2RatioSelection === i ? 'text-[#3A9E82] font-semibold' : 'text-[#718096]'}`}
+                    className={`text-xs text-center ${q2RatioSelection === i ? 'text-[#3A9E82] font-semibold' : 'text-white/40'}`}
                     style={{ width: `${100 / questions[1].options.length}%` }}
                   >
                     {opt.label}
@@ -455,7 +457,7 @@ export default function TeamPanel({
                 ))}
               </div>
               {q2RatioSelection !== null && (
-                <p className="text-sm text-[#0B1F35] font-medium mt-3 text-center">
+                <p className="text-sm text-white font-medium mt-3 text-center">
                   Selected: {questions[1].options[q2RatioSelection].label}
                 </p>
               )}
@@ -465,9 +467,9 @@ export default function TeamPanel({
 
         {/* ── DIAGNOSE ROUND — Q1: Hypothesis ranking ── */}
         {isDiagnoseRound && (
-          <div className="bg-[#F4F7F5] rounded-lg border border-[#D1D9D4] p-4">
-            <div className="text-sm font-medium text-[#0B1F35] mb-3">
-              <span className="text-[#718096] mr-2">Q1.</span>
+          <div className="bg-white/[0.04]/[0.03] rounded-lg border border-white/[0.08] p-4">
+            <div className="text-sm font-medium text-white mb-3">
+              <span className="text-white/40 mr-2">Q1.</span>
               {questions[0].question}
             </div>
             <HypothesisRanking
@@ -482,9 +484,9 @@ export default function TeamPanel({
 
         {/* ── DIAGNOSE Q2 / RFM Q2 — Tile selector ── */}
         {(isDiagnoseRound || round === 'rfm') && (
-          <div className="bg-[#F4F7F5] rounded-lg border border-[#D1D9D4] p-4">
-            <div className="text-sm font-medium text-[#0B1F35] mb-3">
-              <span className="text-[#718096] mr-2">Q2.</span>
+          <div className="bg-white/[0.04]/[0.03] rounded-lg border border-white/[0.08] p-4">
+            <div className="text-sm font-medium text-white mb-3">
+              <span className="text-white/40 mr-2">Q2.</span>
               {questions[1].question}
             </div>
             <TileSelector
@@ -504,16 +506,17 @@ export default function TeamPanel({
         <button
           onClick={async () => { await loadVotes(); setTeamChecked(true); }}
           disabled={!activeMemberDone}
-          className={`w-full py-3 rounded-lg text-sm font-semibold transition-all ${
+          className={`w-full py-3 rounded-2xl text-sm font-semibold transition-all ${
             activeMemberDone
-              ? 'bg-[#0B1F35] hover:bg-[#0B1F35]/90 text-white cursor-pointer'
-              : 'bg-[#EEF2EF] text-[#718096] cursor-not-allowed'
+              ? 'text-white cursor-pointer hover:-translate-y-0.5'
+              : 'text-white/40 cursor-not-allowed'
           }`}
+          style={activeMemberDone ? { background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.12)' } : { background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.06)' }}
         >
           Check with team
         </button>
       ) : (
-        <div className="rounded-lg border border-[#D1D9D4] bg-[#F4F7F5] p-4 flex flex-col gap-3">
+        <div className="rounded-lg border border-white/[0.08] bg-white/[0.04]/[0.03] p-4 flex flex-col gap-3">
           {(() => {
             const hasSplit = detectSplits();
             return (
@@ -541,7 +544,7 @@ export default function TeamPanel({
 
                     return (
                       <div key={qIdx} className="text-sm">
-                        <p className="font-medium text-[#0F1C2E] mb-1">
+                        <p className="font-medium text-white mb-1">
                           Q{qIdx + 1}. {q.question}
                         </p>
                         {votedAligned && (
@@ -557,7 +560,7 @@ export default function TeamPanel({
                         {isSplit && (
                           <div className="flex flex-col gap-0.5 ml-1">
                             {Object.entries(groups).map(([optStr, memberIdxs]) => (
-                              <p key={optStr} className="text-[#4A5568]">
+                              <p key={optStr} className="text-white/60">
                                 <span className="font-medium">
                                   {memberIdxs.map((mIdx) => effectiveMembers[mIdx]?.name).join(', ')}
                                 </span>
@@ -597,14 +600,16 @@ export default function TeamPanel({
                 <div className="flex gap-3">
                   <button
                     onClick={() => setTeamChecked(false)}
-                    className="flex-1 py-2.5 rounded-lg text-sm font-semibold border border-[#D1D9D4] text-[#0F1C2E] hover:bg-white transition-all cursor-pointer"
+                    className="flex-1 py-2.5 rounded-2xl text-sm font-semibold text-white transition-all cursor-pointer"
+                    style={{ background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.12)' }}
                   >
                     Go back
                   </button>
                   <button
                     onClick={handleLock}
                     disabled={locking}
-                    className="flex-1 py-2.5 rounded-lg text-sm font-semibold bg-[#3A9E82] hover:bg-[#2D8A6E] text-white transition-all cursor-pointer"
+                    className="flex-1 py-2.5 rounded-2xl text-sm font-semibold text-white transition-all cursor-pointer hover:-translate-y-0.5"
+                    style={{ background: 'linear-gradient(135deg, #3A9E82, #2D8A6E)', boxShadow: '0 4px 16px rgba(58,158,130,0.3)' }}
                   >
                     {locking ? 'Locking...' : 'Lock in decision \u2192'}
                   </button>
@@ -617,9 +622,9 @@ export default function TeamPanel({
 
       {/* ─── Misalignment modal ─── */}
       {showMisalignModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40">
-          <div className="bg-white rounded-xl shadow-xl max-w-lg w-full mx-4 p-6">
-            <h3 className="text-lg font-bold text-[#0F1C2E] mb-4">Your team is not aligned</h3>
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60">
+          <div className="rounded-2xl max-w-lg w-full mx-4 p-6" style={{ background: 'rgba(17,30,45,0.95)', backdropFilter: 'blur(20px)', border: '1px solid rgba(255,255,255,0.1)', boxShadow: '0 8px 32px rgba(0,0,0,0.5)' }}>
+            <h3 className="text-lg font-bold text-white mb-4">Your team is not aligned</h3>
 
             <div className="flex flex-col gap-4 mb-5">
               {questions.map((q, qIdx) => {
@@ -640,7 +645,7 @@ export default function TeamPanel({
 
                 return (
                   <div key={qIdx} className="text-sm">
-                    <p className="font-medium text-[#0F1C2E] mb-1.5">
+                    <p className="font-medium text-white mb-1.5">
                       &ldquo;{q.question}&rdquo;
                     </p>
                     {votedAligned && (
@@ -651,7 +656,7 @@ export default function TeamPanel({
                     {isSplit && (
                       <div className="flex flex-col gap-1 ml-1">
                         {Object.entries(groups).map(([optStr, memberIdxs]) => (
-                          <p key={optStr} className="text-[#4A5568]">
+                          <p key={optStr} className="text-white/60">
                             <span className="font-medium">
                               {memberIdxs.map((mIdx) => effectiveMembers[mIdx]?.name).join(', ')}
                             </span>
@@ -675,7 +680,7 @@ export default function TeamPanel({
               })}
             </div>
 
-            <p className="text-sm text-[#718096] mb-5">
+            <p className="text-sm text-white/40 mb-5">
               Teams that discuss disagreements before committing tend to make more data-supported decisions.
               Nova can help &mdash; ask her to challenge both sides.
             </p>
@@ -683,14 +688,16 @@ export default function TeamPanel({
             <div className="flex gap-3">
               <button
                 onClick={() => { setShowMisalignModal(false); setTeamChecked(false); }}
-                className="flex-1 py-2.5 rounded-lg text-sm font-semibold border border-[#D1D9D4] text-[#0F1C2E] hover:bg-[#F4F7F5] transition-all cursor-pointer"
+                className="flex-1 py-2.5 rounded-2xl text-sm font-semibold text-white transition-all cursor-pointer"
+                style={{ background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.12)' }}
               >
                 Go back and discuss
               </button>
               <button
                 onClick={commitDecision}
                 disabled={locking}
-                className="flex-1 py-2.5 rounded-lg text-sm font-semibold bg-[#3A9E82] hover:bg-[#2D8A6E] text-white transition-all cursor-pointer"
+                className="flex-1 py-2.5 rounded-2xl text-sm font-semibold text-white transition-all cursor-pointer hover:-translate-y-0.5"
+                style={{ background: 'linear-gradient(135deg, #3A9E82, #2D8A6E)', boxShadow: '0 4px 16px rgba(58,158,130,0.3)' }}
               >
                 {locking ? 'Locking...' : 'Lock in anyway \u2192'}
               </button>

@@ -81,38 +81,38 @@ export default function ClassPatterns({ teams, decisions, scenario }: Props) {
 
   return (
     <div className="space-y-6">
-      <h3 className="text-xl font-semibold text-[#0B1F35]">Class Patterns</h3>
+      <h3 className="text-xl font-semibold text-white">Class Patterns</h3>
       {totalTeamsWithDecisions > 0 && (
-        <p className="text-sm text-[#718096]">
+        <p className="text-sm text-white/40">
           Based on {totalTeamsWithDecisions} team{totalTeamsWithDecisions !== 1 ? 's' : ''} that completed the simulation
         </p>
       )}
 
       <div className="space-y-4">
         {roundPatterns.map((rp) => (
-          <div key={rp.round} className="bg-white rounded-xl p-4 border border-[#D1D9D4]">
-            <h4 className="text-sm font-medium text-[#4A5568] uppercase tracking-wide mb-3 capitalize">
+          <div key={rp.round} className="rounded-2xl p-4" style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.08)', backdropFilter: 'blur(12px)', borderRadius: '16px' }}>
+            <h4 className="text-sm font-medium text-white/60 uppercase tracking-wide mb-3 capitalize">
               {rp.round}
             </h4>
             <div className="space-y-4">
               {rp.questions.map((q, qi) => (
                 <div key={qi}>
-                  <p className="text-sm text-[#0B1F35] font-medium mb-2">{q.question}</p>
+                  <p className="text-sm text-white font-medium mb-2">{q.question}</p>
                   <div className="space-y-1.5">
                     {q.optionCounts.map((opt, oi) => (
                       <div key={oi} className="flex items-center gap-3">
-                        <div className="flex-1 text-xs text-[#4A5568] truncate">{opt.label}</div>
+                        <div className="flex-1 text-xs text-white/60 truncate">{opt.label}</div>
                         <div className="flex items-center gap-2 shrink-0">
-                          <div className="w-24 h-2 bg-[#EEF2EF] rounded-full overflow-hidden">
+                          <div className="w-24 h-2 bg-white/[0.04] rounded-full overflow-hidden">
                             <div
                               className="h-full rounded-full transition-all"
                               style={{
                                 width: `${opt.pct}%`,
-                                backgroundColor: opt.count > 0 ? '#3A9E82' : '#D1D9D4',
+                                backgroundColor: opt.count > 0 ? '#3A9E82' : 'rgba(255,255,255,0.2)',
                               }}
                             />
                           </div>
-                          <span className="text-xs text-[#718096] w-14 text-right">
+                          <span className="text-xs text-white/40 w-14 text-right">
                             {opt.count > 0 ? `${opt.count} team${opt.count !== 1 ? 's' : ''}` : '--'}
                           </span>
                         </div>
@@ -127,13 +127,13 @@ export default function ClassPatterns({ teams, decisions, scenario }: Props) {
       </div>
 
       {/* Discussion Prompts */}
-      <div className="bg-white rounded-xl p-4 border border-[#D1D9D4]">
-        <h4 className="text-sm font-medium text-[#4A5568] uppercase tracking-wide mb-3">
+      <div className="rounded-2xl p-4" style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.08)', backdropFilter: 'blur(12px)', borderRadius: '16px' }}>
+        <h4 className="text-sm font-medium text-white/60 uppercase tracking-wide mb-3">
           Discussion Prompts
         </h4>
         <ul className="space-y-2">
           {prompts.map((p, i) => (
-            <li key={i} className="text-sm text-[#0B1F35] flex gap-2">
+            <li key={i} className="text-sm text-white flex gap-2">
               <span className="text-[#3A9E82] mt-0.5 shrink-0">?</span>
               <span>{p}</span>
             </li>
